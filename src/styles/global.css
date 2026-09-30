@@ -22,6 +22,10 @@
   --color-blue-300:      #79c0ff;
   --color-blue-600:      #1158c7;
 
+  /* Brand accent */
+  --color-accent:        #388bfd;
+  --color-accent-hover:  #1d6fe8;
+
   /* Accent / status */
   --color-green:         #3fb950;
   --color-yellow:        #d29922;

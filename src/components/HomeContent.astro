@@ -1,0 +1,97 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from './ProjectCard.astro';
+import { useTranslations, localizeUrl, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const projects = await getCollection('projects');
+const featured = projects
+  .filter((p) => p.data.featured && p.data.status !== 'comingsoon')
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99))
+  .slice(0, 3);
+---
+
+<BaseLayout lang={lang} title={t('home.title')} description={t('home.description')}>
+  <section class="hero container">
+    <p class="hero-greeting">{t('hero.greeting')}</p>
+    <h1 class="hero-name">TC<span class="hero-accent">Dev</span></h1>
+    <p class="hero-subtitle">{t('hero.subtitle')}</p>
+    <p class="hero-bio">{t('hero.bio')}</p>
+    <div class="hero-cta">
+      <a href={localizeUrl('/progetti', lang)} class="btn btn-primary">{t('hero.cta.projects')}</a>
+      <a href={localizeUrl('/foto', lang)} class="btn btn-ghost">{t('hero.cta.photos')}</a>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-head">
+      <h2>{t('home.featured')}</h2>
+      <a href={localizeUrl('/progetti', lang)} class="section-link">{t('home.viewall')} →</a>
+    </div>
+    <div class="featured-grid">
+      {featured.map((p) => <ProjectCard project={p} lang={lang} />)}
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="section-head">
+      <h2>{t('home.latest')}</h2>
+      <a href={localizeUrl('/foto', lang)} class="section-link">{t('home.viewall')} →</a>
+    </div>
+    <div class="photo-strip" id="home-photo-strip" data-media-base={Astro.site ? new URL('/media/', Astro.site).href : '/media/'}>
+      <p class="photo-empty">{t('photos.empty')}</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero { padding-top: var(--space-24); padding-bottom: var(--space-16); }
+  .hero-greeting { color: var(--color-accent); font-family: var(--font-mono); font-size: 0.95rem; margin-bottom: var(--space-3); }
+  .hero-name { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; }
+  .hero-accent { color: var(--color-accent); }
+  .hero-subtitle { font-size: clamp(1.15rem, 2.5vw, 1.5rem); color: var(--color-text-primary); font-weight: 500; margin-top: var(--space-3); }
+  .hero-bio { max-width: 42rem; color: var(--color-text-secondary); line-height: 1.7; margin-top: var(--space-4); }
+  .hero-cta { display: flex; gap: var(--space-3); margin-top: var(--space-8); flex-wrap: wrap; }
+
+  .section { padding-top: var(--space-8); }
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: var(--space-6); }
+  .section-head h2 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+  .section-link { color: var(--color-accent); text-decoration: none; font-size: 0.9rem; }
+  .section-link:hover { color: var(--color-blue-300); }
+  .featured-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-4); }
+  .photo-strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--space-3); }
+  .photo-empty { color: var(--color-text-muted); font-size: 0.9rem; grid-column: 1 / -1; }
+</style>
+
+<script>
+  const strip = document.getElementById('home-photo-strip');
+  if (strip) {
+    const base = strip.dataset.mediaBase ?? '/media/';
+    fetch(`${base}manifest.json`)
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((photos) => {
+        if (!Array.isArray(photos) || photos.length === 0) return;
+        strip.innerHTML = '';
+        for (const p of photos.slice(0, 6)) {
+          const a = document.createElement('a');
+          a.href = `${base}${p.file}`;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          const img = document.createElement('img');
+          img.src = `${base}${p.file}`;
+          img.alt = p.caption ?? '';
+          img.loading = 'lazy';
+          img.style.cssText = 'width:100%;aspect-ratio:1;object-fit:cover;border-radius:0.625rem;display:block;';
+          a.appendChild(img);
+          strip.appendChild(a);
+        }
+      })
+      .catch(() => {});
+  }
+</script>

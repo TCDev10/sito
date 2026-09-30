@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from './ProjectCard.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const projects = await getCollection('projects');
+const sorted = projects.sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+const active = sorted.filter((p) => p.data.status !== 'comingsoon');
+const comingSoon = sorted.filter((p) => p.data.status === 'comingsoon');
+---
+
+<BaseLayout lang={lang} title={t('projects.title')} description={t('projects.description')}>
+  <div class="container page">
+    <header class="page-header">
+      <h1>{t('projects.heading')}</h1>
+      <p class="page-sub">{t('projects.subtitle')}</p>
+    </header>
+
+    <section class="grid-section">
+      <h2>{t('projects.featured')}</h2>
+      <div class="proj-grid">
+        {active.map((p) => <ProjectCard project={p} lang={lang} />)}
+      </div>
+    </section>
+
+    {comingSoon.length > 0 && (
+      <section class="grid-section">
+        <h2>{t('projects.comingsoon')}</h2>
+        <div class="proj-grid">
+          {comingSoon.map((p) => <ProjectCard project={p} lang={lang} />)}
+        </div>
+      </section>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .page { padding-top: var(--space-12); }
+  .page-header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; }
+  .page-sub { color: var(--color-text-secondary); margin-top: var(--space-2); }
+  .grid-section { margin-top: var(--space-12); }
+  .grid-section h2 { font-size: 1.1rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--space-4); }
+  .proj-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-4); }
+</style>

@@ -1,35 +1,49 @@
 ---
+import { useTranslations, localizeUrl, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 const year = new Date().getFullYear();
+
+const socials = [
+  { href: 'https://github.com/TCDev10', label: 'GitHub', handle: 'TCDev10' },
+  { href: 'https://instagram.com/tcdev', label: 'Instagram', handle: '@tcdev' },
+  { href: 'https://linkedin.com/in/tcdev0', label: 'LinkedIn', handle: 'tcdev0' },
+];
 ---
 
 <footer class="site-footer">
   <div class="container footer-inner">
     <div class="footer-brand">
-      <a href="/" class="footer-logo" aria-label="TCDev Home">
+      <a href={localizeUrl('/', lang)} class="footer-logo" aria-label="TCDev Home">
         TC<span class="accent">Dev</span>
       </a>
-      <p class="footer-tagline">Portfolio, blog e progetti open source.</p>
+      <p class="footer-tagline">{t('footer.tagline')}</p>
     </div>
 
-    <nav class="footer-nav" aria-label="Link footer">
+    <nav class="footer-nav" aria-label="Footer">
       <div class="footer-col">
-        <h3 class="footer-col-title">Esplora</h3>
-        <a href="/">Home</a>
-        <a href="/foto">Foto</a>
-        <a href="/#contact">Contatti</a>
-        <!--<a href="/blog">Blog</a>
-        <a href="/projects">Progetti</a>-->
+        <h3 class="footer-col-title">{t('footer.explore')}</h3>
+        <a href={localizeUrl('/', lang)}>{t('nav.home')}</a>
+        <a href={localizeUrl('/progetti', lang)}>{t('nav.projects')}</a>
+        <a href={localizeUrl('/foto', lang)}>{t('nav.photos')}</a>
+        <a href={localizeUrl('/contatti', lang)}>{t('nav.contacts')}</a>
       </div>
       <div class="footer-col">
-        <h3 class="footer-col-title">Link</h3>
-        <a href="/go/multitool" rel="noopener noreferrer" target="_blank">MultiTool↗</a>
-        <a href="/go/api" rel="noopener noreferrer" target="_blank">API Pubbliche↗</a>
+        <h3 class="footer-col-title">{t('contacts.social')}</h3>
+        {socials.map((s) => (
+          <a href={s.href} rel="me noopener noreferrer" target="_blank">{s.label} ↗</a>
+        ))}
+        <a href="mailto:email@tcdev.xyz">email@tcdev.xyz</a>
       </div>
     </nav>
   </div>
 
   <div class="footer-bottom container">
-    <span>© {year} TCDev. Built with ❤️.</span>
+    <span>© {year} Riccardo — TCDev. {t('footer.rights')}</span>
   </div>
 </footer>
 
@@ -40,14 +54,12 @@ const year = new Date().getFullYear();
     margin-top: var(--space-24);
     padding-top: var(--space-12);
   }
-
   .footer-inner {
     display: grid;
     grid-template-columns: 1fr auto;
     gap: var(--space-12);
     padding-bottom: var(--space-8);
   }
-
   .footer-logo {
     font-size: 1.25rem;
     font-weight: 700;
@@ -55,59 +67,37 @@ const year = new Date().getFullYear();
     text-decoration: none;
     letter-spacing: -0.03em;
   }
-  .footer-logo .accent { color: var(--color-blue-400); }
-
+  .footer-logo .accent { color: var(--color-accent); }
   .footer-tagline {
-    margin-top: var(--space-2);
-    font-size: 0.875rem;
     color: var(--color-text-secondary);
-    max-width: 280px;
+    font-size: 0.9rem;
+    margin-top: var(--space-2);
   }
-
-  .footer-nav {
-    display: flex;
-    gap: var(--space-12);
-  }
-
-  .footer-col {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-
+  .footer-nav { display: flex; gap: var(--space-16); }
+  .footer-col { display: flex; flex-direction: column; gap: var(--space-2); }
   .footer-col-title {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--color-text-muted);
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    margin-bottom: var(--space-1);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
   }
-
   .footer-col a {
-    font-size: 0.875rem;
     color: var(--color-text-secondary);
     text-decoration: none;
+    font-size: 0.925rem;
     transition: color var(--transition-fast);
   }
-  .footer-col a:hover { color: var(--color-blue-400); }
-
+  .footer-col a:hover { color: var(--color-text-primary); }
   .footer-bottom {
     border-top: 1px solid var(--color-border-muted);
-    padding-block: var(--space-4);
-    font-size: 0.8125rem;
+    padding-top: var(--space-4);
+    padding-bottom: var(--space-4);
     color: var(--color-text-muted);
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
+    font-size: 0.85rem;
   }
-  .footer-bottom a { color: inherit; }
-  .footer-bottom a:hover { color: var(--color-blue-400); }
-
-  @media (max-width: 640px) {
-    .footer-inner {
-      grid-template-columns: 1fr;
-    }
-    .footer-nav { flex-wrap: wrap; gap: var(--space-8); }
+  @media (max-width: 720px) {
+    .footer-inner { grid-template-columns: 1fr; gap: var(--space-8); }
+    .footer-nav { gap: var(--space-8); }
   }
 </style>

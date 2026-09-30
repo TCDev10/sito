@@ -1,0 +1,165 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const mediaBase = Astro.site ? new URL('/media/', Astro.site).href : '/media/';
+---
+
+<BaseLayout lang={lang} title={t('photos.title')} description={t('photos.description')}>
+  <div class="container page">
+    <header class="page-header">
+      <h1>{t('nav.photos')}</h1>
+      <p class="page-sub">
+        {t('photos.subtitle')}
+        <a href="https://instagram.com/tcdev" target="_blank" rel="me noopener noreferrer" class="ig-link">
+          {t('photos.follow')}
+        </a>
+      </p>
+    </header>
+
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">{t('photos.all')}</button>
+      <button class="filter-btn" data-filter="landscapes">{t('photos.landscapes')}</button>
+      <button class="filter-btn" data-filter="portraits">{t('photos.portraits')}</button>
+      <button class="filter-btn" data-filter="events">{t('photos.events')}</button>
+    </div>
+
+    <div class="photo-grid" id="photo-grid" data-media-base={mediaBase}>
+      <p class="photo-empty" id="photo-empty">{t('photos.loading')}</p>
+    </div>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="Photo viewer">
+      <button class="lb-close" id="lb-close" aria-label="Close">✕</button>
+      <img id="lb-img" src="" alt="" />
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page { padding-top: var(--space-12); }
+  .page-header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; }
+  .page-sub { color: var(--color-text-secondary); margin-top: var(--space-2); }
+  .ig-link { color: var(--color-accent); text-decoration: none; }
+  .ig-link:hover { color: var(--color-blue-300); }
+
+  .filters { display: flex; gap: var(--space-2); margin-top: var(--space-8); flex-wrap: wrap; }
+  .filter-btn {
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+  .filter-btn:hover { color: var(--color-text-primary); border-color: var(--color-text-secondary); }
+  .filter-btn.active { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+  .photo-grid figure {
+    margin: 0;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    cursor: zoom-in;
+  }
+  .photo-grid img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--transition-base);
+  }
+  .photo-grid figure:hover img { transform: scale(1.04); }
+  .photo-empty { color: var(--color-text-muted); grid-column: 1 / -1; }
+
+  .lightbox {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: var(--space-6);
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 100%; max-height: 100%; border-radius: var(--radius-md); }
+  .lb-close {
+    position: absolute; top: var(--space-4); right: var(--space-4);
+    background: none; border: none; color: #fff;
+    font-size: 1.5rem; cursor: pointer;
+  }
+</style>
+
+<script>
+  interface Photo { file: string; category: string; caption?: string; }
+
+  const grid = document.getElementById('photo-grid') as HTMLElement;
+  const emptyMsg = document.getElementById('photo-empty') as HTMLElement;
+  const lightbox = document.getElementById('lightbox') as HTMLElement;
+  const lbImg = document.getElementById('lb-img') as HTMLImageElement;
+  const lbClose = document.getElementById('lb-close') as HTMLElement;
+  const base = grid.dataset.mediaBase ?? '/media/';
+
+  let photos: Photo[] = [];
+
+  function render(filter: string) {
+    grid.querySelectorAll('figure').forEach((el) => el.remove());
+    const list = filter === 'all' ? photos : photos.filter((p) => p.category === filter);
+    if (list.length === 0) {
+      emptyMsg.style.display = '';
+      return;
+    }
+    emptyMsg.style.display = 'none';
+    for (const p of list) {
+      const fig = document.createElement('figure');
+      const img = document.createElement('img');
+      img.src = `${base}${p.file}`;
+      img.alt = p.caption ?? '';
+      img.loading = 'lazy';
+      fig.appendChild(img);
+      fig.addEventListener('click', () => openLightbox(p));
+      grid.appendChild(fig);
+    }
+  }
+
+  function openLightbox(p: Photo) {
+    lbImg.src = `${base}${p.file}`;
+    lbImg.alt = p.caption ?? '';
+    lightbox.classList.add('open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+  lbClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+
+  document.querySelectorAll('.filter-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      render((btn as HTMLElement).dataset.filter ?? 'all');
+    });
+  });
+
+  fetch(`${base}manifest.json`)
+    .then((r) => (r.ok ? r.json() : Promise.reject()))
+    .then((data: Photo[]) => { photos = data; render('all'); })
+    .catch(() => { emptyMsg.style.display = ''; });
+</script>

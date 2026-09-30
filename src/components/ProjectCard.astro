@@ -1,0 +1,98 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  lang: Lang;
+}
+const { project, lang } = Astro.props;
+const t = useTranslations(lang);
+
+const { title, excerpt, excerptEn, stack, status, repoUrl, demoUrl } = project.data;
+const desc = lang === 'en' && excerptEn ? excerptEn : excerpt;
+
+const statusLabel: Record<string, string> = {
+  active: t('projects.active'),
+  wip: t('projects.wip'),
+  comingsoon: t('projects.comingsoon'),
+  archived: t('projects.archived'),
+};
+---
+
+<article class={`proj-card ${status === 'comingsoon' ? 'comingsoon' : ''}`}>
+  <div class="proj-head">
+    <h3 class="proj-title">{title}</h3>
+    {status && status !== 'active' && (
+      <span class={`status-pill status-${status}`}>{statusLabel[status]}</span>
+    )}
+  </div>
+  <p class="proj-desc">{desc}</p>
+  {stack && stack.length > 0 && (
+    <div class="proj-stack">
+      {stack.map((tech) => <span class="tech-chip">{tech}</span>)}
+    </div>
+  )}
+  {(repoUrl || demoUrl) && (
+    <div class="proj-links">
+      {repoUrl && <a href={repoUrl} target="_blank" rel="noopener noreferrer" class="proj-link">GitHub ↗</a>}
+      {demoUrl && (
+        <a href={demoUrl} target="_blank" rel="noopener noreferrer" class="proj-link primary">
+          {t('projects.visit')} ↗
+        </a>
+      )}
+    </div>
+  )}
+</article>
+
+<style>
+  .proj-card {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    transition: border-color var(--transition-base), transform var(--transition-base);
+  }
+  .proj-card:hover { border-color: var(--color-accent); transform: translateY(-2px); }
+  .proj-card.comingsoon { opacity: 0.65; border-style: dashed; }
+  .proj-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
+  .proj-title { margin: 0; font-size: 1.15rem; font-weight: 600; letter-spacing: -0.02em; }
+  .status-pill {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 10px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+  }
+  .status-wip { color: var(--color-yellow); border-color: var(--color-yellow); }
+  .status-comingsoon { color: var(--color-purple); border-color: var(--color-purple); }
+  .status-archived { color: var(--color-text-muted); }
+  .proj-desc { margin: 0; color: var(--color-text-secondary); font-size: 0.925rem; line-height: 1.6; }
+  .proj-stack { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .tech-chip {
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    padding: 2px 10px;
+    border-radius: var(--radius-full);
+    background: var(--color-bg-elevated);
+    color: var(--color-blue-300);
+  }
+  .proj-links { display: flex; gap: var(--space-4); margin-top: auto; }
+  .proj-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  .proj-link:hover { color: var(--color-text-primary); }
+  .proj-link.primary { color: var(--color-accent); }
+  .proj-link.primary:hover { color: var(--color-blue-300); }
+</style>

@@ -1,45 +1,42 @@
-﻿---
+---
 import '../styles/global.css';
 import NavBar from '../components/NavBar.astro';
 import Footer from '../components/Footer.astro';
+import { getLangFromUrl, useTranslations, alternateUrl, type Lang } from '../i18n/ui';
 
 interface Props {
   title: string;
   description?: string;
   ogImage?: string;
   ogType?: 'website' | 'article';
-  canonical?: string;
   noindex?: boolean;
+  lang?: Lang;
 }
+
+const lang = Astro.props.lang ?? getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const {
   title,
-  description = 'Portfolio fotografico e sviluppo software di TCDev.',
+  description = t('site.description'),
   ogImage = '/logo.jpg',
   ogType = 'website',
-  canonical,
   noindex = false,
 } = Astro.props;
 
 const siteUrl = 'https://tcdev.xyz';
-const canonicalUrl = canonical ? canonical : new URL(Astro.url.pathname, siteUrl).href;
-const fullTitle = title === 'TCDev' ? title : `${title} - TCDev`;
-
-const websiteSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'TCDev',
-  url: siteUrl,
-  inLanguage: 'it-IT',
-};
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const alternatePath = alternateUrl(Astro.url, lang);
+const alternateFullUrl = new URL(alternatePath, siteUrl).href;
+const fullTitle = title === 'TCDev' ? title : `${title} — TCDev`;
 
 const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
-  name: 'TCDev',
+  name: 'Riccardo (TCDev)',
   url: siteUrl,
   sameAs: [
-    'https://github.com/TCDev69',
+    'https://github.com/TCDev10',
     'https://linkedin.com/in/tcdev0',
     'https://instagram.com/tcdev',
   ],
@@ -47,7 +44,7 @@ const personSchema = {
 ---
 
 <!doctype html>
-<html lang="it" class="dark">
+<html lang={lang} class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -56,10 +53,12 @@ const personSchema = {
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang={lang === 'it' ? 'en' : 'it'} href={alternateFullUrl} />
+    <link rel="alternate" hreflang="x-default" href={new URL(alternateUrl(Astro.url, 'en'), siteUrl).href} />
     {noindex ? (
       <meta name="robots" content="noindex,nofollow" />
     ) : (
-      <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+      <meta name="robots" content="index,follow,max-image-preview:large" />
     )}
 
     <meta property="og:type" content={ogType} />
@@ -68,28 +67,25 @@ const personSchema = {
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(ogImage, siteUrl).href} />
     <meta property="og:site_name" content="TCDev" />
-    <meta property="og:locale" content="it_IT" />
+    <meta property="og:locale" content={lang === 'it' ? 'it_IT' : 'en_US'} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={new URL(ogImage, siteUrl).href} />
-    <meta name="twitter:site" content="@tcdev" />
 
     <link rel="icon" href="/favicon.ico" />
-
     <link rel="sitemap" href="/sitemap-index.xml" />
 
-    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)}></script>
     <script type="application/ld+json" set:html={JSON.stringify(personSchema)}></script>
   </head>
   <body>
-    <a href="#main-content" class="skip-link">Vai al contenuto</a>
-    <NavBar />
+    <a href="#main-content" class="skip-link">{lang === 'it' ? 'Vai al contenuto' : 'Skip to content'}</a>
+    <NavBar lang={lang} />
     <main id="main-content">
       <slot />
     </main>
-    <Footer />
+    <Footer lang={lang} />
   </body>
 </html>
 
@@ -99,7 +95,7 @@ const personSchema = {
     left: -9999px;
     top: var(--space-4);
     z-index: 1000;
-    background: var(--color-blue-500);
+    background: var(--color-accent);
     color: #fff;
     padding: var(--space-2) var(--space-4);
     border-radius: var(--radius-md);

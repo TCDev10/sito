@@ -1,92 +1,66 @@
-# TCDev  Sito personale
+# tcdev.xyz
 
-Portfolio fotografico, blog tecnico e progetti open source. Built with **Astro**, deployed on **Cloudflare Pages**.
+Portfolio personale di Riccardo "TCDev" — developer & fotografo.
 
----
+- 🌐 [tcdev.xyz](https://tcdev.xyz)
+- 🛠️ Multitool: [tools.tcdev.xyz](https://tools.tcdev.xyz)
+- 📸 Instagram: [@tcdev](https://instagram.com/tcdev)
+- 💼 LinkedIn: [tcdev0](https://linkedin.com/in/tcdev0)
 
 ## Stack
 
-| Layer | Tecnologia |
-|-------|-----------|
-| Framework | Astro |
-| Styling | Tailwind CSS v4 + CSS custom properties |
-| Contenuto | Markdown / MDX con Content Collections |
-| Commenti | Giscus (GitHub Discussions) |
-| Deploy primario | Cloudflare Pages |
-| Deploy fallback | GitHub Pages (workflow manuale) |
+- **[Astro](https://astro.build)** — sito statico, bilingue (IT/EN)
+- **[Tailwind CSS 4](https://tailwindcss.com)** — styling (via `@tailwindcss/vite`)
+- **Content Collections** — progetti in Markdown con schema zod
+- **Cloudflare Pages** — hosting e deploy
+- **Cloudflare R2** — hosting foto (sotto `/media/`)
 
----
+## Struttura
 
-## Sviluppo locale
-
-```bash
-npm install
-cp .env.example .env   # configura i valori Giscus
-npm run dev            # http://localhost:4321
 ```
-
----
-
-## Aggiungere contenuti
-
-### Post blog  `src/content/blog/nome.md`
-
-```markdown
----
-title: "Titolo"
-date: 2026-03-05
-excerpt: "Breve descrizione."
-lang: it
-tags: ["tag"]
-draft: false
----
-Contenuto Markdown...
+src/
+├── components/     # HomeContent, ProjectsContent, PhotosContent, ContactsContent, NavBar, Footer, ProjectCard
+├── content/
+│   ├── config.ts   # Schema zod (projects)
+│   └── projects/   # Un .md per progetto
+├── i18n/ui.ts      # Dizionari IT/EN + helper (useTranslations, localizeUrl, alternateUrl)
+├── layouts/        # BaseLayout.astro
+├── pages/          # Route IT root, EN sotto /en/
+└── styles/global.css
 ```
-
-### Progetto  `src/content/projects/nome.md`
-
-```markdown
----
-title: "Nome Progetto"
-date: 2026-03-05
-excerpt: "Cosa fa."
-stack: ["Node.js"]
-status: active
-featured: true
-repoUrl: "https://github.com/..."
-demoUrl: "https://..."
-draft: false
----
-```
-
-### Foto portfolio
-
-Aggiungi JPG/WebP in `public/images/portfolio/` e aggiorna l'array in `src/pages/index.astro`.
-
----
-
-## Giscus (commenti)
-
-1. Vai su https://giscus.app
-2. Abilita GitHub Discussions nel repo
-3. Copia i valori nel file `.env`
-
----
-
-## Deploy Cloudflare Pages
-
-- Build command: `npm run build`
-- Output dir: `dist`
-- Env vars: vedi `.env.example`
-
-Deploy automatico a ogni push su `main`.
-
----
 
 ## Comandi
 
-| Comando | Descrizione |
-|---------|-------------|
-| `npm run dev` | Dev server localhost:4321 |
-| `npm run build` | Build produzione in dist/ |
-| `npm run preview` | Preview build locale |
+```bash
+npm install        # setup
+npm run dev        # dev server su localhost:4321
+npm run build      # build statico in dist/
+npm run preview    # serve dist/
+```
+
+## Aggiungere un progetto
+
+Crea `src/content/projects/<slug>.md`:
+
+```yaml
+---
+title: Nome Progetto
+date: 2025-01-01
+excerpt: Descrizione italiana (1-2 frasi).
+excerptEn: English description (1-2 sentences).
+stack: [TypeScript, Astro]
+status: active          # active | wip | comingsoon | archived
+repoUrl: https://github.com/TCDev10/...
+demoUrl: https://...    # opzionale
+featured: true          # appare in home
+order: 1                # ordinamento
+---
+```
+
+## Foto
+
+Le foto sono servite da Cloudflare R2. La pagina `/foto` legge un manifest JSON dai media host — vedi `PhotosContent.astro` per la config.
+
+## License
+
+© Riccardo "TCDev" — Tutti i diritti riservati.
