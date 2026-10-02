@@ -1,15 +1,15 @@
 # Cloudflare Pages redirects
 /go/multitool  https://tools.tcdev.xyz/  301
 
-# Trailing-slash → never (align with trailingSlash: 'never' + canonicals)
+# Trailing-slash → never for prerendered HTML only (build.format:'file').
+# Do NOT put SSR paths here (/admin, /{lang}/photos): the CF adapter adds
+# redirect targets to _routes.json exclude, which would 404 the Worker.
+# SSR trailing slashes are stripped in src/middleware.ts.
+# With format:'directory', CF 308s /it → /it/ and these rules looped.
 /it/           /it  301
 /en/           /en  301
 /it/projects/  /it/projects  301
 /en/projects/  /en/projects  301
-/it/photos/    /it/photos  301
-/en/photos/    /en/photos  301
-/it/photos/*/  /it/photos/:splat  301
-/en/photos/*/  /en/photos/:splat  301
 /it/about/     /it/about  301
 /en/about/     /en/about  301
 /it/contact/   /it/contact  301

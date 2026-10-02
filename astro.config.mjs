@@ -45,6 +45,11 @@ function localeAlternates(canonicalUrl) {
 export default defineConfig({
   site: SITE_URL,
   trailingSlash: 'never',
+  // Cloudflare Pages 308s directory indexes (/it → /it/). With format:'directory'
+  // that fought public/_redirects (/it/ → /it) and looped. Emit flat HTML files instead.
+  build: {
+    format: 'file',
+  },
   output: 'server',
   adapter: cloudflare({
     imageService: 'compile',
