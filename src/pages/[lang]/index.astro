@@ -49,9 +49,13 @@ const albumMeta = await Promise.all(
       <p class="prose-muted mt-6 max-w-2xl text-base sm:text-lg">
         {t(locale, 'home.bio')}
       </p>
+      <p class="prose-muted mt-4 max-w-2xl text-sm sm:text-base">
+        {t(locale, 'home.bridge')}
+      </p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a class="btn-primary" href={localizedPath(locale, '/projects')}>{t(locale, 'home.cta.projects')}</a>
         <a class="btn-ghost" href={localizedPath(locale, '/photos')}>{t(locale, 'home.cta.photos')}</a>
+        <a class="btn-ghost" href={localizedPath(locale, '/about')}>{t(locale, 'home.cta.about')}</a>
       </div>
     </div>
 
@@ -59,10 +63,16 @@ const albumMeta = await Promise.all(
       <div class="border-b border-line p-5">
         <p class="text-xs font-semibold uppercase tracking-wider text-accent">{t(locale, 'nav.dev')}</p>
         <p class="mt-2 text-sm text-mute">{t(locale, 'home.dev.blurb')}</p>
+        <a class="mt-3 inline-block text-sm text-accent hover:underline" href={localizedPath(locale, '/projects')}>
+          {t(locale, 'home.cta.projects')}
+        </a>
       </div>
       <div class="p-5">
         <p class="text-xs font-semibold uppercase tracking-wider text-accent-2">{t(locale, 'nav.photo')}</p>
         <p class="mt-2 text-sm text-mute">{t(locale, 'home.photo.blurb')}</p>
+        <a class="mt-3 inline-block text-sm text-accent hover:underline" href={localizedPath(locale, '/photos')}>
+          {t(locale, 'home.cta.photos')}
+        </a>
       </div>
     </aside>
   </section>
@@ -103,7 +113,7 @@ const albumMeta = await Promise.all(
       ) : (
         <div class="grid gap-4 sm:grid-cols-3">
           {albumMeta.map(({ album, count, coverUrl }) => (
-            <AlbumCard album={album} locale={locale} count={count} coverUrl={coverUrl} />
+            <AlbumCard album={album} locale={locale} count={count} coverUrl={coverUrl} headingLevel="h3" />
           ))}
         </div>
       )

@@ -1,10 +1,10 @@
 # TCDev (full)
 
-> Extended machine-readable summary of https://tcdev.xyz for AI agents and generative engines. Prefer this file when you need project names; use /llms.txt for a shorter briefing.
+> Extended machine-readable summary of https://tcdev.xyz for AI agents and generative engines. Prefer this file when you need project names; use /llms.txt for a shorter briefing. Key facts also appear in visible HTML (About FAQ, Home, Projects, Photos).
 
 ## Who
 
-Riccardo, online as TCDev. Developer and photographer based in Bergamo, Italy.
+Riccardo, online as TCDev (also TCDev10 on GitHub). Developer and photographer based in Bergamo, Italy (Lombardia).
 
 Locked bio (IT): Mi chiamo Riccardo, online mi trovi come TCDev. Sono uno sviluppatore e fotografo di Bergamo: progetto e scrivo software, e fotografo paesaggi e natura, ritratti e eventi.
 
@@ -36,11 +36,11 @@ Bilingual (IT/EN) portfolio spanning software development and photography. Langu
 
 Public albums (seed topics; more can be added from admin):
 
-- Landscapes / nature (Paesaggi / natura)
-- Portraits / people (Ritratti / persone)
-- Events (Eventi)
+- Landscapes / nature (Paesaggi / natura) at /[lang]/photos/paesaggi-natura
+- Portraits / people (Ritratti / persone) at /[lang]/photos/ritratti-persone
+- Events (Eventi) at /[lang]/photos/eventi
 
-Album routes look like /[lang]/photos/[album]. Photos are stored on Cloudflare R2 and served via the site.
+Photos are stored on Cloudflare R2 and served via the site.
 
 ## Public software projects
 
@@ -55,7 +55,7 @@ Listed on /projects (names only; see that page for blurbs and links when availab
 - GameSync
 - AuraTracker
 
-GitHub org/user: https://github.com/TCDev10
+GitHub: https://github.com/TCDev10
 
 ## Coming soon (no private repo URLs)
 
@@ -70,6 +70,14 @@ These appear on the site with a coming-soon badge. Source repos stay private unt
 - ordivo
 - NewRAEE
 - GameSaves
+
+## FAQ (same answers as visible About page)
+
+- Who is TCDev? See locked bios above.
+- Based in Bergamo, Italy.
+- Photos: landscapes and nature, portraits and people, events.
+- Not all projects are open source; some are coming soon without source links.
+- Contact: email@tcdev.xyz, Instagram @TCDev, LinkedIn linkedin.com/in/tcdev0, GitHub TCDev10.
 
 ## Contact
 

@@ -1,7 +1,7 @@
 ---
 export const prerender = true;
 ---
-<html lang="en">
+<html lang="it">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -22,7 +22,8 @@ export const prerender = true;
       main { text-align: center; padding: 2rem; max-width: 28rem; }
       .eyebrow { letter-spacing: 0.2em; text-transform: uppercase; color: #7dd3c0; font-size: 0.75rem; }
       h1 { font-size: 2rem; margin: 0.75rem 0 0.75rem; }
-      p { color: #8b93a7; margin: 0 0 1.5rem; }
+      p { color: #8b93a7; margin: 0 0 1.25rem; }
+      .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
       a {
         color: #0c0d10;
         background: #7dd3c0;
@@ -32,15 +33,27 @@ export const prerender = true;
         font-weight: 600;
         display: inline-flex;
       }
+      a.ghost {
+        background: transparent;
+        color: #e8ebf2;
+        border: 1px solid #2a2f3a;
+      }
       a:focus-visible { outline: 2px solid #7dd3c0; outline-offset: 3px; }
     </style>
   </head>
   <body>
     <main>
       <p class="eyebrow">404</p>
-      <h1>Page not found</h1>
-      <p>The page you asked for is missing or was moved.</p>
-      <a href="/">Back home</a>
+      <h1>Pagina non trovata / Page not found</h1>
+      <p>La pagina non esiste o è stata spostata. The page is missing or was moved.</p>
+      <div class="actions">
+        <a href="/it">Home IT</a>
+        <a class="ghost" href="/en">Home EN</a>
+      </div>
+      <p style="margin-top:1.5rem;font-size:0.875rem">
+        <a class="ghost" href="/it/projects">Progetti</a>
+        <a class="ghost" href="/it/photos">Foto</a>
+      </p>
     </main>
   </body>
 </html>

@@ -9,11 +9,15 @@ interface Props {
   locale: Locale;
   count?: number;
   coverUrl?: string;
+  /** Heading level for card title (h2 on album index, h3 under a page H2). */
+  headingLevel?: 'h2' | 'h3';
 }
 
-const { album, locale, count = 0, coverUrl } = Astro.props;
+const { album, locale, count = 0, coverUrl, headingLevel = 'h2' } = Astro.props;
 const href = localizedPath(locale, `/photos/${album.slug}`);
 const empty = count === 0;
+const HeadingTag = headingLevel;
+const coverAlt = empty ? '' : album.name[locale];
 ---
 
 <a class="card-interactive group block overflow-hidden" href={href}>
@@ -22,9 +26,12 @@ const empty = count === 0;
       <div class="media-frame">
         <img
           src={coverUrl}
-          alt=""
+          alt={coverAlt}
           class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
           loading="lazy"
+          decoding="async"
+          width={800}
+          height={600}
         />
       </div>
     ) : (
@@ -37,7 +44,7 @@ const empty = count === 0;
   }
   <div class="p-5">
     <div class="flex items-start justify-between gap-3">
-      <h2 class="font-display text-lg font-semibold leading-snug">{album.name[locale]}</h2>
+      <HeadingTag class="font-display text-lg font-semibold leading-snug">{album.name[locale]}</HeadingTag>
       {
         empty && (
           <span class="badge-mute shrink-0">{t(locale, 'photos.empty.badge')}</span>

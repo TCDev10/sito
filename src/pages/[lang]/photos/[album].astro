@@ -20,8 +20,13 @@ if (!album || album.archived) {
   return Astro.rewrite('/404');
 }
 const photos = await listPhotos(album.id, Astro.locals);
-const title = `${album.name[locale]} | TCDev`;
+const title = `${album.name[locale]} | TCDev Bergamo`;
 const description = album.description[locale];
+const breadcrumbs = [
+  { name: t(locale, 'nav.home'), path: '/' },
+  { name: t(locale, 'photos.title'), path: '/photos' },
+  { name: album.name[locale], path: `/photos/${album.slug}` },
+];
 ---
 
 <BaseLayout
@@ -29,13 +34,9 @@ const description = album.description[locale];
   title={title}
   description={description}
   path={`/photos/${album.slug}`}
+  breadcrumbs={breadcrumbs}
 >
-  <p>
-    <a class="text-sm text-accent hover:underline" href={localizedPath(locale, '/photos')}>
-      ← {t(locale, 'photos.back')}
-    </a>
-  </p>
-  <header class="page-header mt-4">
+  <header class="page-header">
     <p class="eyebrow">{t(locale, 'nav.photo')}</p>
     <h1 class="mt-3 font-display text-4xl font-semibold tracking-tight">{album.name[locale]}</h1>
     <p class="prose-muted mt-4">{album.description[locale]}</p>
@@ -59,13 +60,25 @@ const description = album.description[locale];
               src={photo.url}
               alt={`${album.name[locale]} (${index + 1})`}
               class="h-auto w-full object-cover"
-              loading="lazy"
-              width={photo.width}
-              height={photo.height}
+              loading={index < 2 ? 'eager' : 'lazy'}
+              decoding="async"
+              width={photo.width ?? 1200}
+              height={photo.height ?? 800}
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             />
           </li>
         ))}
       </ul>
     )
   }
+
+  <p class="mt-10">
+    <a class="text-sm text-accent hover:underline" href={localizedPath(locale, '/photos')}>
+      ← {t(locale, 'photos.back')}
+    </a>
+    {' · '}
+    <a class="text-sm text-accent hover:underline" href={localizedPath(locale, '/projects')}>
+      {t(locale, 'photos.cross.cta')}
+    </a>
+  </p>
 </BaseLayout>

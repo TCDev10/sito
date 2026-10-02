@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
-import { isLocale } from '../../i18n';
+import { isLocale, localizedPath } from '../../i18n';
 import { t } from '../../i18n/ui';
 import { comingSoonProjects, publicProjects } from '../../data/projects';
 import type { Locale } from '../../data/site';
@@ -17,6 +17,10 @@ if (!isLocale(lang)) {
   return Astro.rewrite('/404');
 }
 const locale = lang as Locale;
+const breadcrumbs = [
+  { name: t(locale, 'nav.home'), path: '/' },
+  { name: t(locale, 'projects.title'), path: '/projects' },
+];
 ---
 
 <BaseLayout
@@ -24,9 +28,10 @@ const locale = lang as Locale;
   title={t(locale, 'seo.projects.title')}
   description={t(locale, 'seo.projects.desc')}
   path="/projects"
+  breadcrumbs={breadcrumbs}
 >
   <header class="page-header">
-    <p class="eyebrow">{t(locale, 'nav.dev')}</p>
+    <p class="eyebrow">{t(locale, 'nav.dev')} · Bergamo</p>
     <h1 class="mt-3 font-display text-4xl font-semibold tracking-tight">{t(locale, 'projects.title')}</h1>
     <p class="prose-muted mt-4">{t(locale, 'projects.subtitle')}</p>
   </header>
@@ -44,4 +49,11 @@ const locale = lang as Locale;
       {comingSoonProjects().map((project) => <ProjectCard project={project} locale={locale} />)}
     </div>
   </section>
+
+  <aside class="section-gap panel p-6">
+    <p class="prose-muted text-sm sm:text-base">{t(locale, 'projects.cross')}</p>
+    <a class="mt-3 inline-block text-sm font-medium text-accent hover:underline" href={localizedPath(locale, '/photos')}>
+      {t(locale, 'projects.cross.cta')}
+    </a>
+  </aside>
 </BaseLayout>

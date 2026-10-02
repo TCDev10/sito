@@ -1,0 +1,3 @@
+Contact: mailto:email@tcdev.xyz
+Preferred-Languages: it, en
+Canonical: https://tcdev.xyz/.well-known/security.txt

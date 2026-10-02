@@ -1,19 +1,19 @@
 # TCDev
 
-> Personal portfolio of Riccardo (online as TCDev): developer and photographer in Bergamo. Software projects plus photo galleries. Site is bilingual (Italian and English).
+> Personal portfolio of Riccardo (online as TCDev): developer and photographer in Bergamo, Italy. Software projects plus photo galleries. Site is bilingual (Italian and English).
 
 Mi chiamo Riccardo, online mi trovi come TCDev. Sono uno sviluppatore e fotografo di Bergamo: progetto e scrivo software, e fotografo paesaggi e natura, ritratti e eventi.
 
 I'm Riccardo, online as TCDev. I'm a developer and photographer from Bergamo: I build software, and I shoot landscapes and nature, portraits, and events.
 
-Photo albums cover landscapes and nature, portraits and people, and events. Albums are managed from a private admin area (not for public crawl or citation).
+Photo albums cover landscapes and nature, portraits and people, and events. Albums are managed from a private admin area (not for public crawl or citation). Some software projects are public on GitHub (TCDev10); others appear as coming soon without private repo URLs.
 
 ## Italian pages
 
 - [Home](https://tcdev.xyz/it): Overview
 - [Projects](https://tcdev.xyz/it/projects): Public software and coming-soon work
 - [Photos](https://tcdev.xyz/it/photos): Photo album index
-- [About](https://tcdev.xyz/it/about): Bio and camera gear
+- [About](https://tcdev.xyz/it/about): Bio, gear, FAQ
 - [Contact](https://tcdev.xyz/it/contact): Email and social links
 
 ## English pages
@@ -21,7 +21,7 @@ Photo albums cover landscapes and nature, portraits and people, and events. Albu
 - [Home](https://tcdev.xyz/en): Overview
 - [Projects](https://tcdev.xyz/en/projects): Public software and coming-soon work
 - [Photos](https://tcdev.xyz/en/photos): Photo album index
-- [About](https://tcdev.xyz/en/about): Bio and camera gear
+- [About](https://tcdev.xyz/en/about): Bio, gear, FAQ
 - [Contact](https://tcdev.xyz/en/contact): Email and social links
 
 ## Contact
@@ -31,6 +31,7 @@ Photo albums cover landscapes and nature, portraits and people, and events. Albu
 - [GitHub](https://github.com/TCDev10): TCDev10
 - Email: email@tcdev.xyz
 - Site: https://tcdev.xyz
+- Location: Bergamo, Italy
 
 ## Optional
 

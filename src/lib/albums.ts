@@ -26,8 +26,8 @@ export const SEED_ALBUMS: Album[] = [
     slug: 'paesaggi-natura',
     name: { it: 'Paesaggi / natura', en: 'Landscapes / nature' },
     description: {
-      it: 'Paesaggi, natura e outdoor.',
-      en: 'Landscapes, nature, and outdoors.',
+      it: 'Paesaggi, natura e outdoor. Selezione fotografica di TCDev.',
+      en: 'Landscapes, nature, and outdoors. Selected photography by TCDev.',
     },
     archived: false,
     createdAt: '2026-01-01T00:00:00.000Z',
@@ -38,8 +38,8 @@ export const SEED_ALBUMS: Album[] = [
     slug: 'ritratti-persone',
     name: { it: 'Ritratti / persone', en: 'Portraits / people' },
     description: {
-      it: 'Ritratti e persone.',
-      en: 'Portraits and people.',
+      it: 'Ritratti e persone. Portfolio fotografico di TCDev.',
+      en: 'Portraits and people. TCDev photographic portfolio.',
     },
     archived: false,
     createdAt: '2026-01-01T00:00:00.000Z',
@@ -50,8 +50,8 @@ export const SEED_ALBUMS: Album[] = [
     slug: 'eventi',
     name: { it: 'Eventi', en: 'Events' },
     description: {
-      it: 'Eventi e reportage leggero.',
-      en: 'Events and light reportage.',
+      it: 'Eventi e reportage leggero. Portfolio fotografico di TCDev.',
+      en: 'Events and light reportage. TCDev photographic portfolio.',
     },
     archived: false,
     createdAt: '2026-01-01T00:00:00.000Z',

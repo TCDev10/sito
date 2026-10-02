@@ -25,6 +25,10 @@ const albumMeta = await Promise.all(
     };
   }),
 );
+const breadcrumbs = [
+  { name: t(locale, 'nav.home'), path: '/' },
+  { name: t(locale, 'photos.title'), path: '/photos' },
+];
 ---
 
 <BaseLayout
@@ -32,9 +36,10 @@ const albumMeta = await Promise.all(
   title={t(locale, 'seo.photos.title')}
   description={t(locale, 'seo.photos.desc')}
   path="/photos"
+  breadcrumbs={breadcrumbs}
 >
   <header class="page-header">
-    <p class="eyebrow">{t(locale, 'nav.photo')}</p>
+    <p class="eyebrow">{t(locale, 'nav.photo')} · Bergamo</p>
     <h1 class="mt-3 font-display text-4xl font-semibold tracking-tight">{t(locale, 'photos.title')}</h1>
     <p class="prose-muted mt-4">{t(locale, 'photos.subtitle')}</p>
   </header>
@@ -52,9 +57,16 @@ const albumMeta = await Promise.all(
     ) : (
       <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {albumMeta.map(({ album, count, coverUrl }) => (
-          <AlbumCard album={album} locale={locale} count={count} coverUrl={coverUrl} />
+          <AlbumCard album={album} locale={locale} count={count} coverUrl={coverUrl} headingLevel="h2" />
         ))}
       </div>
     )
   }
+
+  <aside class="section-gap panel p-6">
+    <p class="prose-muted text-sm sm:text-base">{t(locale, 'photos.cross')}</p>
+    <a class="mt-3 inline-block text-sm font-medium text-accent hover:underline" href={localizedPath(locale, '/projects')}>
+      {t(locale, 'photos.cross.cta')}
+    </a>
+  </aside>
 </BaseLayout>
