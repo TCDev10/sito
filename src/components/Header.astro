@@ -11,11 +11,11 @@ interface Props {
 const { locale, path } = Astro.props;
 const alt = otherLocale(locale);
 const links = [
-  { href: localizedPath(locale, '/'), label: t(locale, 'nav.home'), match: '/' },
-  { href: localizedPath(locale, '/projects'), label: t(locale, 'nav.projects'), match: '/projects' },
-  { href: localizedPath(locale, '/photos'), label: t(locale, 'nav.photos'), match: '/photos' },
-  { href: localizedPath(locale, '/about'), label: t(locale, 'nav.about'), match: '/about' },
-  { href: localizedPath(locale, '/contact'), label: t(locale, 'nav.contact'), match: '/contact' },
+  { href: localizedPath(locale, '/'), label: t(locale, 'nav.home'), match: '/', short: t(locale, 'nav.home') },
+  { href: localizedPath(locale, '/projects'), label: t(locale, 'nav.projects'), match: '/projects', short: t(locale, 'nav.projects') },
+  { href: localizedPath(locale, '/photos'), label: t(locale, 'nav.photos'), match: '/photos', short: t(locale, 'nav.photos') },
+  { href: localizedPath(locale, '/about'), label: t(locale, 'nav.about'), match: '/about', short: t(locale, 'nav.about') },
+  { href: localizedPath(locale, '/contact'), label: t(locale, 'nav.contact'), match: '/contact', short: t(locale, 'nav.contact') },
 ];
 
 function active(match: string) {
@@ -26,20 +26,18 @@ function active(match: string) {
 
 <header class="sticky top-0 z-40 border-b border-line/70 bg-ink/80 backdrop-blur-md">
   <div class="container-page flex h-16 items-center justify-between gap-4">
-    <a href={localizedPath(locale, '/')} class="font-display text-lg font-semibold tracking-tight">
+    <a
+      href={localizedPath(locale, '/')}
+      class="font-display text-lg font-semibold tracking-tight focus-visible:rounded-md"
+    >
       TC<span class="text-accent">Dev</span>
     </a>
-    <nav class="hidden items-center gap-1 md:flex" aria-label="Primary">
+    <nav class="hidden items-center gap-1 md:flex" aria-label={t(locale, 'nav.primary')}>
       {
         links.map((link) => (
           <a
             href={link.href}
-            class:list={[
-              'rounded-full px-3 py-1.5 text-sm transition',
-              active(link.match)
-                ? 'bg-panel-2 text-text'
-                : 'text-mute hover:text-text',
-            ]}
+            class="nav-pill"
             aria-current={active(link.match) ? 'page' : undefined}
           >
             {link.label}
@@ -50,27 +48,33 @@ function active(match: string) {
     <div class="flex items-center gap-2">
       <a
         href={localizedPath(alt, path)}
-        class="rounded-full border border-line px-3 py-1 text-xs font-semibold uppercase tracking-wider text-mute hover:border-accent/40 hover:text-text"
+        class="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-line px-3 text-xs font-semibold uppercase tracking-wider text-mute transition hover:border-accent/40 hover:text-text"
         hreflang={alt}
         lang={alt}
+        aria-label={t(locale, 'nav.switchLang')}
       >
         {alt}
       </a>
     </div>
   </div>
-  <nav class="container-page flex gap-1 overflow-x-auto pb-3 md:hidden" aria-label="Mobile">
+</header>
+
+<nav
+  class="fixed inset-x-0 bottom-0 z-40 border-t border-line/70 bg-ink/95 backdrop-blur-md md:hidden"
+  style="padding-bottom: env(safe-area-inset-bottom, 0px)"
+  aria-label={t(locale, 'nav.primary')}
+>
+  <div class="mx-auto flex max-w-6xl">
     {
       links.map((link) => (
         <a
           href={link.href}
-          class:list={[
-            'shrink-0 rounded-full px-3 py-1 text-xs',
-            active(link.match) ? 'bg-panel-2 text-text' : 'text-mute',
-          ]}
+          class="mobile-tab"
+          aria-current={active(link.match) ? 'page' : undefined}
         >
-          {link.label}
+          <span class="max-w-full truncate">{link.short}</span>
         </a>
       ))
     }
-  </nav>
-</header>
+  </div>
+</nav>

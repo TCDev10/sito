@@ -10,34 +10,61 @@ interface Props {
 
 const { project, locale } = Astro.props;
 const href = project.url ?? project.repo;
+const isPublic = project.status === 'public' && Boolean(href);
+const isSoon = project.status === 'coming-soon';
+const actionLabel = project.url
+  ? t(locale, 'projects.visit')
+  : t(locale, 'projects.repo');
 ---
 
-<article class="card flex h-full flex-col p-5">
-  <div class="mb-3 flex items-start justify-between gap-3">
-    <h3 class="font-display text-lg font-semibold">{project.name}</h3>
-    {
-      project.status === 'coming-soon' && (
-        <span class="rounded-full bg-panel-2 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-warm">
-          {t(locale, 'projects.soon.badge')}
-        </span>
-      )
-    }
-  </div>
-  <p class="prose-muted flex-1 text-sm">{project.description[locale]}</p>
-  {
-    project.tags && (
-      <ul class="mt-4 flex flex-wrap gap-2">
-        {project.tags.map((tag) => (
-          <li class="rounded-full border border-line px-2 py-0.5 text-[11px] text-mute">{tag}</li>
-        ))}
-      </ul>
-    )
-  }
-  {
-    href && project.status === 'public' && (
-      <a class="btn-ghost mt-5 self-start" href={href} rel="noopener noreferrer" target="_blank">
-        {project.url ? t(locale, 'projects.visit') : t(locale, 'projects.repo')}
-      </a>
-    )
-  }
-</article>
+{
+  isPublic ? (
+    <a
+      class="card-interactive flex h-full flex-col p-5"
+      href={href}
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <div class="mb-3 flex items-start justify-between gap-3">
+        <h3 class="font-display text-lg font-semibold leading-snug">{project.name}</h3>
+        <span class="sr-only">{actionLabel}</span>
+      </div>
+      <p class="prose-muted flex-1 text-sm">{project.description[locale]}</p>
+      {project.tags && (
+        <ul class="mt-4 flex flex-wrap gap-2">
+          {project.tags.map((tag) => (
+            <li class="tag">{tag}</li>
+          ))}
+        </ul>
+      )}
+      <span class="mt-5 text-sm font-medium text-accent" aria-hidden="true">
+        {actionLabel} →
+      </span>
+    </a>
+  ) : (
+    <article
+      class:list={[
+        'card flex h-full flex-col p-5',
+        isSoon && 'border-dashed opacity-95',
+      ]}
+    >
+      <div class="mb-3 flex items-start justify-between gap-3">
+        <h3 class="font-display text-lg font-semibold leading-snug">{project.name}</h3>
+        {isSoon && (
+          <span class="badge-soon">{t(locale, 'projects.soon.badge')}</span>
+        )}
+      </div>
+      <p class="prose-muted flex-1 text-sm">{project.description[locale]}</p>
+      {project.tags && (
+        <ul class="mt-4 flex flex-wrap gap-2">
+          {project.tags.map((tag) => (
+            <li class="tag">{tag}</li>
+          ))}
+        </ul>
+      )}
+      {isSoon && (
+        <p class="mt-5 text-xs text-mute">{t(locale, 'projects.soon.hint')}</p>
+      )}
+    </article>
+  )
+}

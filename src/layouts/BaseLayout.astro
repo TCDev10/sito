@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE, type Locale } from '../data/site';
 import { localizedPath, otherLocale } from '../i18n';
+import { t } from '../i18n/ui';
 
 interface Props {
   locale: Locale;
@@ -33,7 +34,7 @@ const ogImage = new URL('/logo.jpg', SITE.url).toString();
 <html lang={locale}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -53,6 +54,7 @@ const ogImage = new URL('/logo.jpg', SITE.url).toString();
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="theme-color" content="#0c0d10" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -66,10 +68,10 @@ const ogImage = new URL('/logo.jpg', SITE.url).toString();
       href="#main"
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-accent focus:px-3 focus:py-2 focus:text-ink"
     >
-      Skip to content
+      {t(locale, 'a11y.skip')}
     </a>
     <Header locale={locale} path={path} />
-    <main id="main" class="container-page pb-20 pt-10">
+    <main id="main" class="container-page pb-28 pt-10 md:pb-20">
       <slot />
     </main>
     <Footer locale={locale} />

@@ -21,27 +21,27 @@ const locale = lang as Locale;
   description={t(locale, 'seo.about.desc')}
   path="/about"
 >
-  <header class="max-w-2xl">
+  <header class="page-header">
     <p class="eyebrow">TCDev</p>
     <h1 class="mt-3 font-display text-4xl font-semibold tracking-tight">{t(locale, 'about.title')}</h1>
     <p class="prose-muted mt-6 text-base sm:text-lg">{t(locale, 'about.bio')}</p>
   </header>
 
   <section class="mt-12 grid gap-6 md:grid-cols-2">
-    <div class="card p-6">
-      <h2 class="font-display text-xl font-semibold">{t(locale, 'about.gear')}</h2>
-      <ul class="mt-4 space-y-2 text-sm text-mute">
-        {SITE.gear.map((item) => <li class="rounded-lg border border-line bg-panel-2/50 px-3 py-2 text-text">{item}</li>)}
+    <section class="panel p-6" aria-labelledby="gear-heading">
+      <h2 id="gear-heading" class="font-display text-xl font-semibold">{t(locale, 'about.gear')}</h2>
+      <ul class="mt-4 divide-y divide-line text-sm text-text">
+        {SITE.gear.map((item) => <li class="py-3 first:pt-0 last:pb-0">{item}</li>)}
       </ul>
-    </div>
-    <div class="card p-6">
-      <h2 class="font-display text-xl font-semibold">{t(locale, 'about.where')}</h2>
+    </section>
+    <section class="panel p-6" aria-labelledby="where-heading">
+      <h2 id="where-heading" class="font-display text-xl font-semibold">{t(locale, 'about.where')}</h2>
       <ul class="mt-4 space-y-3 text-sm">
-        <li><a class="text-accent hover:underline" href={SITE.social.instagram}>Instagram TCDev</a></li>
-        <li><a class="text-accent hover:underline" href={SITE.social.linkedin}>LinkedIn</a></li>
-        <li><a class="text-accent hover:underline" href={SITE.social.github}>GitHub TCDev10</a></li>
+        <li><a class="text-accent hover:underline" href={SITE.social.instagram} rel="noopener noreferrer">Instagram TCDev</a></li>
+        <li><a class="text-accent hover:underline" href={SITE.social.linkedin} rel="noopener noreferrer">LinkedIn</a></li>
+        <li><a class="text-accent hover:underline" href={SITE.social.github} rel="noopener noreferrer">GitHub TCDev10</a></li>
         <li><a class="text-accent hover:underline" href={SITE.social.email}>{SITE.email}</a></li>
       </ul>
-    </div>
+    </section>
   </section>
 </BaseLayout>

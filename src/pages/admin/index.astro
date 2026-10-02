@@ -82,6 +82,12 @@ export const prerender = false;
       .badge.mock { color: #f0b27a; border-color: #5a4630; }
       .hidden { display: none; }
       #status { min-height: 1.25rem; font-size: 0.85rem; color: var(--mute); margin-top: 0.5rem; }
+      :focus { outline: none; }
+      :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+      button:disabled { opacity: 0.55; cursor: not-allowed; }
+      button[aria-busy="true"] { position: relative; }
+      .empty { color: var(--mute); font-size: 0.9rem; padding: 0.5rem 0; }
+      .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
     </style>
   </head>
   <body>
@@ -141,9 +147,9 @@ export const prerender = false;
           <h2 style="margin:0 0 0.75rem;font-size:1.1rem">Upload</h2>
           <label for="albumSelect">Target album</label>
           <select id="albumSelect"></select>
-          <div id="drop" class="drop">Drop images here or click to choose</div>
+          <div id="drop" class="drop" role="button" tabindex="0" aria-controls="fileInput">Drop images here or click to choose</div>
           <input id="fileInput" type="file" accept="image/*" multiple hidden />
-          <p id="status"></p>
+          <p id="status" role="status" aria-live="polite"></p>
         </div>
       </section>
     </main>
@@ -173,6 +179,10 @@ export const prerender = false;
         const select = $('albumSelect');
         root.innerHTML = '';
         select.innerHTML = '';
+        if (!state.albums.length) {
+          root.innerHTML = '<p class="empty">No albums yet. Create one above.</p>';
+          return;
+        }
         for (const album of state.albums) {
           const row = document.createElement('div');
           row.className = 'album';
@@ -265,31 +275,48 @@ export const prerender = false;
         return { blob, width, height };
       }
 
+      function setUploading(busy) {
+        drop.setAttribute('aria-busy', busy ? 'true' : 'false');
+        fileInput.disabled = busy;
+        $('createAlbum').disabled = busy;
+      }
+
       async function uploadFiles(fileList) {
         const albumId = $('albumSelect').value;
         if (!albumId) {
           status('Select an album first.');
           return;
         }
-        const files = [...fileList];
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-          status(`Processing ${i + 1}/${files.length}: ${file.name}`);
-          const { blob, width, height } = await toWebp(file);
-          const form = new FormData();
-          form.append('albumId', albumId);
-          form.append('width', String(width));
-          form.append('height', String(height));
-          form.append('file', blob, file.name.replace(/\.\w+$/, '') + '.webp');
-          const headers = {};
-          if (state.token) headers.Authorization = `Bearer ${state.token}`;
-          const res = await fetch('/api/upload', { method: 'POST', body: form, headers, credentials: 'same-origin' });
-          if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            throw new Error(err.error || res.statusText);
-          }
+        const files = [...fileList].filter((f) => f.type.startsWith('image/'));
+        if (!files.length) {
+          status('No image files selected.');
+          return;
         }
-        status(`Uploaded ${files.length} image(s).`);
+        setUploading(true);
+        try {
+          for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            status(`Processing ${i + 1}/${files.length}: ${file.name}`);
+            const { blob, width, height } = await toWebp(file);
+            status(`Uploading ${i + 1}/${files.length}: ${file.name}`);
+            const form = new FormData();
+            form.append('albumId', albumId);
+            form.append('width', String(width));
+            form.append('height', String(height));
+            form.append('file', blob, file.name.replace(/\.\w+$/, '') + '.webp');
+            const headers = {};
+            if (state.token) headers.Authorization = `Bearer ${state.token}`;
+            const res = await fetch('/api/upload', { method: 'POST', body: form, headers, credentials: 'same-origin' });
+            if (!res.ok) {
+              const err = await res.json().catch(() => ({}));
+              throw new Error(err.error || res.statusText);
+            }
+          }
+          status(`Uploaded ${files.length} image(s).`);
+        } finally {
+          setUploading(false);
+          fileInput.value = '';
+        }
       }
 
       $('loginBtn').onclick = () => unlock().catch((e) => alert(e.message));
@@ -322,7 +349,13 @@ export const prerender = false;
 
       const drop = $('drop');
       const fileInput = $('fileInput');
-      drop.onclick = () => fileInput.click();
+      drop.onclick = () => { if (!fileInput.disabled) fileInput.click(); };
+      drop.onkeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (!fileInput.disabled) fileInput.click();
+        }
+      };
       fileInput.onchange = () => uploadFiles(fileInput.files).catch((e) => status(e.message));
       drop.ondragover = (e) => { e.preventDefault(); drop.classList.add('drag'); };
       drop.ondragleave = () => drop.classList.remove('drag');

@@ -23,20 +23,20 @@ const locale = lang as Locale;
   description={t(locale, 'seo.projects.desc')}
   path="/projects"
 >
-  <header class="max-w-2xl">
+  <header class="page-header">
     <p class="eyebrow">{t(locale, 'nav.dev')}</p>
     <h1 class="mt-3 font-display text-4xl font-semibold tracking-tight">{t(locale, 'projects.title')}</h1>
     <p class="prose-muted mt-4">{t(locale, 'projects.subtitle')}</p>
   </header>
 
-  <section class="mt-12">
+  <section class="section-gap !mt-12">
     <h2 class="mb-5 font-display text-xl font-semibold">{t(locale, 'projects.public')}</h2>
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {publicProjects().map((project) => <ProjectCard project={project} locale={locale} />)}
     </div>
   </section>
 
-  <section class="mt-16">
+  <section class="section-gap">
     <h2 class="mb-5 font-display text-xl font-semibold">{t(locale, 'projects.soon')}</h2>
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {comingSoonProjects().map((project) => <ProjectCard project={project} locale={locale} />)}

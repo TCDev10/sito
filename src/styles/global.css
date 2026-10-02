@@ -12,12 +12,31 @@
   --color-accent: #7dd3c0;
   --color-accent-2: #c4a1ff;
   --color-warm: #f0b27a;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-pill: 999px;
 }
 
 @layer base {
   html {
     color-scheme: dark;
     scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 
   body {
@@ -29,6 +48,15 @@
 
   a {
     @apply text-inherit;
+  }
+
+  :focus {
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
   }
 
   ::selection {
@@ -45,12 +73,40 @@
     @apply rounded-2xl border border-line bg-panel/80 backdrop-blur-sm;
   }
 
+  .card-interactive {
+    @apply rounded-2xl border border-line bg-panel/80 backdrop-blur-sm transition-[border-color,background-color,transform] duration-200;
+  }
+
+  .card-interactive:hover {
+    border-color: rgb(125 211 192 / 0.4);
+    background-color: rgb(27 30 39 / 0.55);
+  }
+
+  .card-interactive:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  .panel {
+    @apply rounded-2xl border border-line bg-panel/60;
+  }
+
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition bg-accent text-ink hover:brightness-110;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition bg-accent text-ink hover:brightness-110;
+  }
+
+  .btn-primary:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition border border-line bg-panel-2/60 text-text hover:border-accent/50;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition border border-line bg-panel-2/60 text-text hover:border-accent/50;
+  }
+
+  .btn-ghost:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
   }
 
   .eyebrow {
@@ -59,5 +115,72 @@
 
   .prose-muted {
     @apply text-mute leading-relaxed;
+  }
+
+  .section-gap {
+    @apply mt-16 sm:mt-20;
+  }
+
+  .page-header {
+    @apply max-w-2xl;
+  }
+
+  .empty-state {
+    @apply rounded-2xl border border-line bg-panel/60 flex flex-col items-start gap-3 p-6 sm:p-8;
+  }
+
+  .empty-state p {
+    @apply text-mute leading-relaxed text-sm sm:text-base max-w-xl;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide;
+  }
+
+  .badge-soon {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide bg-panel-2 text-warm border border-line;
+  }
+
+  .badge-mute {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide bg-panel-2 text-mute border border-line;
+  }
+
+  .tag {
+    @apply rounded-full border border-line px-2 py-0.5 text-[11px] text-mute;
+  }
+
+  .media-frame {
+    @apply aspect-[4/3] w-full overflow-hidden bg-panel-2;
+  }
+
+  .media-frame-empty {
+    @apply aspect-[4/3] w-full overflow-hidden relative flex items-center justify-center;
+    background:
+      linear-gradient(135deg, rgb(27 30 39 / 0.95), rgb(12 13 16 / 0.95)),
+      radial-gradient(circle at 30% 20%, rgb(125 211 192 / 0.08), transparent 55%);
+  }
+
+  .nav-pill {
+    @apply inline-flex min-h-10 items-center justify-center rounded-full px-3 py-1.5 text-sm transition;
+  }
+
+  .nav-pill[aria-current="page"] {
+    @apply bg-panel-2 text-text;
+  }
+
+  .nav-pill:not([aria-current="page"]) {
+    @apply text-mute hover:text-text;
+  }
+
+  .mobile-tab {
+    @apply flex min-h-12 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-[10px] font-medium tracking-wide transition;
+  }
+
+  .mobile-tab[aria-current="page"] {
+    @apply text-accent;
+  }
+
+  .mobile-tab:not([aria-current="page"]) {
+    @apply text-mute;
   }
 }

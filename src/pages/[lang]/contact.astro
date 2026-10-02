@@ -28,7 +28,7 @@ const contacts = [
   description={t(locale, 'seo.contact.desc')}
   path="/contact"
 >
-  <header class="max-w-2xl">
+  <header class="page-header">
     <p class="eyebrow">{t(locale, 'nav.contact')}</p>
     <h1 class="mt-3 font-display text-4xl font-semibold tracking-tight">{t(locale, 'contact.title')}</h1>
     <p class="prose-muted mt-4">{t(locale, 'contact.subtitle')}</p>
@@ -38,7 +38,11 @@ const contacts = [
     {
       contacts.map((c) => (
         <li>
-          <a class="card block p-5 transition hover:border-accent/40" href={c.href} rel="noopener noreferrer">
+          <a
+            class="card-interactive block p-5"
+            href={c.href}
+            rel={c.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+          >
             <p class="text-xs uppercase tracking-wider text-mute">{c.label}</p>
             <p class="mt-2 font-display text-lg font-semibold">{c.value}</p>
           </a>
