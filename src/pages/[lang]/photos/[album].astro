@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { isLocale, localizedPath } from '../../../i18n';
+import { t } from '../../../i18n/ui';
+import { getAlbumBySlug, listPhotos } from '../../../lib/storage';
+import type { Locale } from '../../../data/site';
+
+export const prerender = false;
+
+const lang = Astro.params.lang!;
+const albumSlug = Astro.params.album!;
+if (!isLocale(lang)) return Astro.redirect('/it');
+const locale = lang as Locale;
+
+const album = await getAlbumBySlug(albumSlug, Astro.locals);
+if (!album || album.archived) {
+  return new Response(null, { status: 404, statusText: 'Not Found' });
+}
+const photos = await listPhotos(album.id, Astro.locals);
+const title = `${album.name[locale]} | TCDev`;
+const description = album.description[locale];
+---
+
+<BaseLayout
+  locale={locale}
+  title={title}
+  description={description}
+  path={`/photos/${album.slug}`}
+>
+  <p>
+    <a class="text-sm text-accent hover:underline" href={localizedPath(locale, '/photos')}>
+      ← {t(locale, 'photos.back')}
+    </a>
+  </p>
+  <header class="mt-4 max-w-2xl">
+    <p class="eyebrow">{t(locale, 'nav.photo')}</p>
+    <h1 class="mt-3 font-display text-4xl font-semibold tracking-tight">{album.name[locale]}</h1>
+    <p class="prose-muted mt-4">{album.description[locale]}</p>
+  </header>
+
+  {
+    photos.length === 0 ? (
+      <p class="prose-muted mt-12">{t(locale, 'photos.empty')}</p>
+    ) : (
+      <ul class="mt-12 columns-1 gap-4 sm:columns-2 lg:columns-3">
+        {photos.map((photo) => (
+          <li class="mb-4 break-inside-avoid overflow-hidden rounded-2xl border border-line bg-panel">
+            <img
+              src={photo.url}
+              alt={album.name[locale]}
+              class="h-auto w-full object-cover"
+              loading="lazy"
+              width={photo.width}
+              height={photo.height}
+            />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</BaseLayout>

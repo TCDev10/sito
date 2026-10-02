@@ -1,112 +1,77 @@
-﻿---
+---
 import '../styles/global.css';
-import NavBar from '../components/NavBar.astro';
+import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { SITE, type Locale } from '../data/site';
+import { localizedPath, otherLocale } from '../i18n';
 
 interface Props {
+  locale: Locale;
   title: string;
-  description?: string;
-  ogImage?: string;
-  ogType?: 'website' | 'article';
-  canonical?: string;
-  noindex?: boolean;
+  description: string;
+  path?: string;
+  ogType?: string;
 }
 
 const {
+  locale,
   title,
-  description = 'Portfolio fotografico e sviluppo software di TCDev.',
-  ogImage = '/logo.jpg',
+  description,
+  path = '/',
   ogType = 'website',
-  canonical,
-  noindex = false,
 } = Astro.props;
 
-const siteUrl = 'https://tcdev.xyz';
-const canonicalUrl = canonical ? canonical : new URL(Astro.url.pathname, siteUrl).href;
-const fullTitle = title === 'TCDev' ? title : `${title} - TCDev`;
-
-const websiteSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'TCDev',
-  url: siteUrl,
-  inLanguage: 'it-IT',
-};
-
-const personSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'TCDev',
-  url: siteUrl,
-  sameAs: [
-    'https://github.com/TCDev69',
-    'https://linkedin.com/in/tcdev0',
-    'https://instagram.com/tcdev',
-  ],
-};
+const canonicalPath = localizedPath(locale, path);
+const canonical = new URL(canonicalPath, SITE.url).toString();
+const altLocale = otherLocale(locale);
+const altPath = localizedPath(altLocale, path);
+const altUrl = new URL(altPath, SITE.url).toString();
+const ogImage = new URL('/logo.jpg', SITE.url).toString();
 ---
 
 <!doctype html>
-<html lang="it" class="dark">
+<html lang={locale}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-
-    <title>{fullTitle}</title>
+    <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalUrl} />
-    {noindex ? (
-      <meta name="robots" content="noindex,nofollow" />
-    ) : (
-      <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
-    )}
-
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={locale} href={canonical} />
+    <link rel="alternate" hreflang={altLocale} href={altUrl} />
+    <link rel="alternate" hreflang="x-default" href={new URL(localizedPath('it', path), SITE.url).toString()} />
     <meta property="og:type" content={ogType} />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:title" content={fullTitle} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL(ogImage, siteUrl).href} />
-    <meta property="og:site_name" content="TCDev" />
-    <meta property="og:locale" content="it_IT" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={fullTitle} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={locale === 'it' ? 'it_IT' : 'en_US'} />
+    <meta property="og:locale:alternate" content={locale === 'it' ? 'en_US' : 'it_IT'} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={new URL(ogImage, siteUrl).href} />
-    <meta name="twitter:site" content="@tcdev" />
-
+    <meta name="twitter:image" content={ogImage} />
     <link rel="icon" href="/favicon.ico" />
-
-    <link rel="sitemap" href="/sitemap-index.xml" />
-
-    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)}></script>
-    <script type="application/ld+json" set:html={JSON.stringify(personSchema)}></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Sans:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <a href="#main-content" class="skip-link">Vai al contenuto</a>
-    <NavBar />
-    <main id="main-content">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-accent focus:px-3 focus:py-2 focus:text-ink"
+    >
+      Skip to content
+    </a>
+    <Header locale={locale} path={path} />
+    <main id="main" class="container-page pb-20 pt-10">
       <slot />
     </main>
-    <Footer />
+    <Footer locale={locale} />
   </body>
 </html>
-
-<style>
-  .skip-link {
-    position: absolute;
-    left: -9999px;
-    top: var(--space-4);
-    z-index: 1000;
-    background: var(--color-blue-500);
-    color: #fff;
-    padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius-md);
-    font-weight: 500;
-    text-decoration: none;
-  }
-  .skip-link:focus {
-    left: var(--space-4);
-  }
-</style>

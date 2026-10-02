@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE, type Locale } from '../../data/site';
+import { isLocale } from '../../i18n';
+import { t } from '../../i18n/ui';
+
+export const prerender = true;
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'it' } }, { params: { lang: 'en' } }];
+}
+
+const lang = Astro.params.lang!;
+if (!isLocale(lang)) return Astro.redirect('/it');
+const locale = lang as Locale;
+---
+
+<BaseLayout
+  locale={locale}
+  title={t(locale, 'seo.about.title')}
+  description={t(locale, 'seo.about.desc')}
+  path="/about"
+>
+  <header class="max-w-2xl">
+    <p class="eyebrow">TCDev</p>
+    <h1 class="mt-3 font-display text-4xl font-semibold tracking-tight">{t(locale, 'about.title')}</h1>
+    <p class="prose-muted mt-6 text-base sm:text-lg">{t(locale, 'about.bio')}</p>
+  </header>
+
+  <section class="mt-12 grid gap-6 md:grid-cols-2">
+    <div class="card p-6">
+      <h2 class="font-display text-xl font-semibold">{t(locale, 'about.gear')}</h2>
+      <ul class="mt-4 space-y-2 text-sm text-mute">
+        {SITE.gear.map((item) => <li class="rounded-lg border border-line bg-panel-2/50 px-3 py-2 text-text">{item}</li>)}
+      </ul>
+    </div>
+    <div class="card p-6">
+      <h2 class="font-display text-xl font-semibold">{t(locale, 'about.where')}</h2>
+      <ul class="mt-4 space-y-3 text-sm">
+        <li><a class="text-accent hover:underline" href={SITE.social.instagram}>Instagram TCDev</a></li>
+        <li><a class="text-accent hover:underline" href={SITE.social.linkedin}>LinkedIn</a></li>
+        <li><a class="text-accent hover:underline" href={SITE.social.github}>GitHub TCDev10</a></li>
+        <li><a class="text-accent hover:underline" href={SITE.social.email}>{SITE.email}</a></li>
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

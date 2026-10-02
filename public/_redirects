@@ -1,6 +1,2 @@
-# Cloudflare Pages — Redirect config
-# (Astro gestisce i redirect principali via astro.config.mjs)
-# Questo file è un fallback esplicito per CF Pages headers.
-
+# Cloudflare Pages fallback redirects
 /go/multitool  https://tools.tcdev.xyz/  301
-/go/api        https://api.tcdev.xyz/    301

@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { isLocale, localizedPath } from '../../i18n';
+import { t } from '../../i18n/ui';
+import { publicProjects } from '../../data/projects';
+import { listAlbums } from '../../lib/storage';
+import type { Locale } from '../../data/site';
+
+export const prerender = true;
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'it' } }, { params: { lang: 'en' } }];
+}
+
+const lang = Astro.params.lang!;
+if (!isLocale(lang)) return Astro.redirect('/it');
+const locale = lang as Locale;
+const featured = publicProjects().slice(0, 4);
+const albums = (await listAlbums()).slice(0, 3);
+---
+
+<BaseLayout
+  locale={locale}
+  title={t(locale, 'seo.home.title')}
+  description={t(locale, 'seo.home.desc')}
+  path="/"
+>
+  <section class="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+    <div>
+      <p class="eyebrow">{t(locale, 'home.eyebrow')}</p>
+      <h1 class="mt-4 max-w-2xl font-display text-4xl font-semibold tracking-tight sm:text-5xl">
+        {t(locale, 'home.title')}
+      </h1>
+      <p class="prose-muted mt-6 max-w-2xl text-base sm:text-lg">
+        {t(locale, 'home.bio')}
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a class="btn-primary" href={localizedPath(locale, '/projects')}>{t(locale, 'home.cta.projects')}</a>
+        <a class="btn-ghost" href={localizedPath(locale, '/photos')}>{t(locale, 'home.cta.photos')}</a>
+      </div>
+    </div>
+    <div class="card grid gap-4 p-5">
+      <div class="rounded-xl border border-line bg-panel-2/70 p-4">
+        <p class="text-xs font-semibold uppercase tracking-wider text-accent">{t(locale, 'nav.dev')}</p>
+        <p class="mt-2 text-sm text-mute">{t(locale, 'home.dev.blurb')}</p>
+      </div>
+      <div class="rounded-xl border border-line bg-panel-2/70 p-4">
+        <p class="text-xs font-semibold uppercase tracking-wider text-accent-2">{t(locale, 'nav.photo')}</p>
+        <p class="mt-2 text-sm text-mute">{t(locale, 'home.photo.blurb')}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mt-20">
+    <div class="mb-6 flex items-end justify-between gap-4">
+      <div>
+        <p class="eyebrow">{t(locale, 'home.section.dev')}</p>
+        <h2 class="mt-2 font-display text-2xl font-semibold">{t(locale, 'projects.title')}</h2>
+      </div>
+      <a class="text-sm text-accent hover:underline" href={localizedPath(locale, '/projects')}>
+        {t(locale, 'home.cta.projects')}
+      </a>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {
+        featured.map((project) => (
+          <article class="card p-5">
+            <h3 class="font-display text-lg font-semibold">{project.name}</h3>
+            <p class="prose-muted mt-2 text-sm">{project.description[locale]}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="mt-20">
+    <div class="mb-6 flex items-end justify-between gap-4">
+      <div>
+        <p class="eyebrow">{t(locale, 'home.section.photo')}</p>
+        <h2 class="mt-2 font-display text-2xl font-semibold">{t(locale, 'photos.title')}</h2>
+      </div>
+      <a class="text-sm text-accent hover:underline" href={localizedPath(locale, '/photos')}>
+        {t(locale, 'home.cta.photos')}
+      </a>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-3">
+      {
+        albums.map((album) => (
+          <a
+            class="card block p-5 transition hover:border-accent/40"
+            href={localizedPath(locale, `/photos/${album.slug}`)}
+          >
+            <h3 class="font-display text-lg font-semibold">{album.name[locale]}</h3>
+            <p class="prose-muted mt-2 text-sm">{album.description[locale]}</p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

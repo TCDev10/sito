@@ -1,57 +1,18 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+export const prerender = true;
 ---
-
-<BaseLayout title="404 — Pagina non trovata" noindex={true}>
-  <div class="container not-found">
-    <div class="not-found-inner">
-      <span class="not-found-code">404</span>
-      <h1 class="not-found-title">Pagina non trovata</h1>
-      <p class="not-found-desc">
-        La pagina che cerchi non esiste o è stata spostata.
-      </p>
-      <div class="not-found-actions">
-        <a href="/" class="btn btn-primary">Torna alla Home</a>
-        <!--<a href="/blog" class="btn btn-ghost">Vai al Blog</a>-->
-      </div>
-    </div>
-  </div>
-</BaseLayout>
-
-<style>
-  .not-found {
-    min-height: calc(100dvh - 120px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-  .not-found-inner {
-    max-width: 480px;
-  }
-  .not-found-code {
-    font-size: clamp(5rem, 15vw, 9rem);
-    font-weight: 800;
-    line-height: 1;
-    background: linear-gradient(135deg, var(--color-blue-500), var(--color-blue-300));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    display: block;
-    margin-bottom: var(--space-4);
-  }
-  .not-found-title {
-    font-size: clamp(1.25rem, 3vw, 1.75rem);
-    margin-bottom: var(--space-4);
-  }
-  .not-found-desc {
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-8);
-  }
-  .not-found-actions {
-    display: flex;
-    gap: var(--space-3);
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-</style>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 | TCDev</title>
+    <link rel="icon" href="/favicon.ico" />
+  </head>
+  <body style="font-family:system-ui;background:#0c0d10;color:#e8ebf2;min-height:100dvh;display:grid;place-items:center;margin:0">
+    <main style="text-align:center;padding:2rem">
+      <p style="letter-spacing:0.2em;text-transform:uppercase;color:#7dd3c0;font-size:0.75rem">404</p>
+      <h1 style="font-size:2rem;margin:0.5rem 0 1rem">Page not found</h1>
+      <p><a href="/" style="color:#7dd3c0">Back home</a></p>
+    </main>
+  </body>
+</html>

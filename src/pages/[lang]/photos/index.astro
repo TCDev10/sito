@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { isLocale, localizedPath } from '../../../i18n';
+import { t } from '../../../i18n/ui';
+import { listAlbums, listPhotos } from '../../../lib/storage';
+import type { Locale } from '../../../data/site';
+
+export const prerender = false;
+
+const lang = Astro.params.lang!;
+if (!isLocale(lang)) return Astro.redirect('/it');
+const locale = lang as Locale;
+const albums = await listAlbums(Astro.locals);
+const counts = await Promise.all(
+  albums.map(async (a) => [a.id, (await listPhotos(a.id, Astro.locals)).length] as const),
+);
+const countMap = Object.fromEntries(counts);
+---
+
+<BaseLayout
+  locale={locale}
+  title={t(locale, 'seo.photos.title')}
+  description={t(locale, 'seo.photos.desc')}
+  path="/photos"
+>
+  <header class="max-w-2xl">
+    <p class="eyebrow">{t(locale, 'nav.photo')}</p>
+    <h1 class="mt-3 font-display text-4xl font-semibold tracking-tight">{t(locale, 'photos.title')}</h1>
+    <p class="prose-muted mt-4">{t(locale, 'photos.subtitle')}</p>
+  </header>
+
+  <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      albums.map((album) => (
+        <a
+          class="card block overflow-hidden transition hover:border-accent/40"
+          href={localizedPath(locale, `/photos/${album.slug}`)}
+        >
+          <div class="aspect-[4/3] bg-gradient-to-br from-panel-2 to-ink"></div>
+          <div class="p-5">
+            <h2 class="font-display text-lg font-semibold">{album.name[locale]}</h2>
+            <p class="prose-muted mt-2 text-sm">{album.description[locale]}</p>
+            <p class="mt-3 text-xs uppercase tracking-wider text-mute">
+              {countMap[album.id] ?? 0} {t(locale, 'photos.count')}
+            </p>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</BaseLayout>

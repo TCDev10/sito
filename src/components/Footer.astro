@@ -1,113 +1,27 @@
 ---
-const year = new Date().getFullYear();
+import { SITE, type Locale } from '../data/site';
+import { t } from '../i18n/ui';
+import { localizedPath } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
 ---
 
-<footer class="site-footer">
-  <div class="container footer-inner">
-    <div class="footer-brand">
-      <a href="/" class="footer-logo" aria-label="TCDev Home">
-        TC<span class="accent">Dev</span>
-      </a>
-      <p class="footer-tagline">Portfolio, blog e progetti open source.</p>
+<footer class="border-t border-line/70">
+  <div class="container-page flex flex-col gap-6 py-10 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <p class="font-display text-base font-semibold">TCDev</p>
+      <p class="mt-1 text-sm text-mute">{t(locale, 'footer.rights')}</p>
     </div>
-
-    <nav class="footer-nav" aria-label="Link footer">
-      <div class="footer-col">
-        <h3 class="footer-col-title">Esplora</h3>
-        <a href="/">Home</a>
-        <a href="/foto">Foto</a>
-        <a href="/#contact">Contatti</a>
-        <!--<a href="/blog">Blog</a>
-        <a href="/projects">Progetti</a>-->
-      </div>
-      <div class="footer-col">
-        <h3 class="footer-col-title">Link</h3>
-        <a href="/go/multitool" rel="noopener noreferrer" target="_blank">MultiTool↗</a>
-        <a href="/go/api" rel="noopener noreferrer" target="_blank">API Pubbliche↗</a>
-      </div>
-    </nav>
-  </div>
-
-  <div class="footer-bottom container">
-    <span>© {year} TCDev. Built with ❤️.</span>
+    <ul class="flex flex-wrap gap-4 text-sm text-mute">
+      <li><a class="hover:text-accent" href={SITE.social.instagram}>Instagram</a></li>
+      <li><a class="hover:text-accent" href={SITE.social.linkedin}>LinkedIn</a></li>
+      <li><a class="hover:text-accent" href={SITE.social.github}>GitHub</a></li>
+      <li><a class="hover:text-accent" href={SITE.social.email}>{SITE.email}</a></li>
+      <li><a class="hover:text-accent" href={localizedPath(locale, '/admin')}>{t(locale, 'nav.admin')}</a></li>
+    </ul>
   </div>
 </footer>
-
-<style>
-  .site-footer {
-    border-top: 1px solid var(--color-border-muted);
-    background: var(--color-bg-surface);
-    margin-top: var(--space-24);
-    padding-top: var(--space-12);
-  }
-
-  .footer-inner {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: var(--space-12);
-    padding-bottom: var(--space-8);
-  }
-
-  .footer-logo {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    text-decoration: none;
-    letter-spacing: -0.03em;
-  }
-  .footer-logo .accent { color: var(--color-blue-400); }
-
-  .footer-tagline {
-    margin-top: var(--space-2);
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
-    max-width: 280px;
-  }
-
-  .footer-nav {
-    display: flex;
-    gap: var(--space-12);
-  }
-
-  .footer-col {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-
-  .footer-col-title {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: var(--space-1);
-  }
-
-  .footer-col a {
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    transition: color var(--transition-fast);
-  }
-  .footer-col a:hover { color: var(--color-blue-400); }
-
-  .footer-bottom {
-    border-top: 1px solid var(--color-border-muted);
-    padding-block: var(--space-4);
-    font-size: 0.8125rem;
-    color: var(--color-text-muted);
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-  }
-  .footer-bottom a { color: inherit; }
-  .footer-bottom a:hover { color: var(--color-blue-400); }
-
-  @media (max-width: 640px) {
-    .footer-inner {
-      grid-template-columns: 1fr;
-    }
-    .footer-nav { flex-wrap: wrap; gap: var(--space-8); }
-  }
-</style>
