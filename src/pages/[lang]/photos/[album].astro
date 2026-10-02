@@ -55,9 +55,9 @@ const robots = photos.length === 0 ? 'noindex, follow' : undefined;
         />
       </div>
     ) : (
-      <ul class="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <ul class="mt-12 columns-1 gap-4 sm:columns-2 lg:columns-3 xl:columns-4">
         {photos.map((photo, index) => (
-          <li class="overflow-hidden rounded-2xl border border-line bg-panel">
+          <li class="mb-4 break-inside-avoid overflow-hidden rounded-2xl border border-line bg-panel">
             <img
               src={photo.url}
               alt={`${album.name[locale]} (${index + 1})`}
