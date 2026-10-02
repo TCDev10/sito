@@ -78,7 +78,6 @@ These appear on the site with a coming-soon badge. Source repos stay private unt
 - Photos: landscapes and nature, portraits and people, events.
 - Not all projects are open source; some are coming soon without source links.
 - Contact: email@tcdev.xyz, Instagram @TCDev, LinkedIn linkedin.com/in/tcdev0, GitHub TCDev10.
-- Is TCDev the same as tcdev.de or tcdev.cz? No. This site is the portfolio of Riccardo (TCDev) in Bergamo, Italy. Domain tcdev.xyz, GitHub TCDev10.
 - Do you build company websites in Bergamo? This site is a personal portfolio for software and photography, not a PMI agency service list. For collaborations: email@tcdev.xyz.
 - Where can I see MicaPDF, multitool, and AutoPPT? On the Projects page (/it/projects or /en/projects) with links to tools and public repositories.
 

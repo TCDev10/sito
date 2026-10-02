@@ -88,14 +88,11 @@ export const ui = {
     'faq.q5': 'Come ti contatto?',
     'faq.a5':
       'Email email@tcdev.xyz, Instagram @TCDev, LinkedIn linkedin.com/in/tcdev0, GitHub TCDev10.',
-    'faq.q6': 'TCDev è la stessa cosa di tcdev.de o tcdev.cz?',
+    'faq.q6': 'Fai siti web per aziende a Bergamo?',
     'faq.a6':
-      'No. Questo sito è il portfolio di Riccardo (TCDev) a Bergamo, Italia. Dominio tcdev.xyz, GitHub TCDev10.',
-    'faq.q7': 'Fai siti web per aziende a Bergamo?',
-    'faq.a7':
       'Il sito è un portfolio personale di software e fotografia, non un listino servizi per PMI. Per collaborazioni: email@tcdev.xyz.',
-    'faq.q8': 'Dove vedo MicaPDF, multitool e AutoPPT?',
-    'faq.a8':
+    'faq.q7': 'Dove vedo MicaPDF, multitool e AutoPPT?',
+    'faq.a7':
       'Nella pagina Progetti trovi le schede con i link ai tool e ai repository pubblici.',
     'contact.title': 'Contatti',
     'contact.subtitle':
@@ -216,14 +213,11 @@ export const ui = {
     'faq.q5': 'How can I contact you?',
     'faq.a5':
       'Email email@tcdev.xyz, Instagram @TCDev, LinkedIn linkedin.com/in/tcdev0, GitHub TCDev10.',
-    'faq.q6': 'Is TCDev the same as tcdev.de or tcdev.cz?',
+    'faq.q6': 'Do you build company websites in Bergamo?',
     'faq.a6':
-      'No. This site is the portfolio of Riccardo (TCDev) in Bergamo, Italy. Domain tcdev.xyz, GitHub TCDev10.',
-    'faq.q7': 'Do you build company websites in Bergamo?',
-    'faq.a7':
       'This site is a personal portfolio for software and photography, not a PMI agency service list. For collaborations: email@tcdev.xyz.',
-    'faq.q8': 'Where can I see MicaPDF, multitool, and AutoPPT?',
-    'faq.a8':
+    'faq.q7': 'Where can I see MicaPDF, multitool, and AutoPPT?',
+    'faq.a7':
       'On the Projects page you will find cards with links to the tools and public repositories.',
     'contact.title': 'Contact',
     'contact.subtitle':
@@ -275,6 +269,5 @@ export function faqItems(locale: Locale): { question: string; answer: string }[]
     { question: t(locale, 'faq.q5'), answer: t(locale, 'faq.a5') },
     { question: t(locale, 'faq.q6'), answer: t(locale, 'faq.a6') },
     { question: t(locale, 'faq.q7'), answer: t(locale, 'faq.a7') },
-    { question: t(locale, 'faq.q8'), answer: t(locale, 'faq.a8') },
   ];
 }
