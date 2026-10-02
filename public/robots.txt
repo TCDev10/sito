@@ -11,4 +11,3 @@ Disallow: /api/
 # Full summary: https://tcdev.xyz/llms-full.txt
 
 Sitemap: https://tcdev.xyz/sitemap-index.xml
-Agentmap: https://tcdev.xyz/.well-known/ai-catalog.json
