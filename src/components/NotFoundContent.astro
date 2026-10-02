@@ -9,9 +9,9 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
 
-<BaseLayout lang={lang} title={t('notfound.title')} description={t('notfound.message')}>
+<BaseLayout lang={lang} title={t('notfound.title')} description={t('notfound.message')} noindex>
   <div class="container notfound">
-    <p class="code">404</p>
+    <p class="code" aria-hidden="true">4<em class="accent-italic">0</em>4</p>
     <h1>{t('notfound.heading')}</h1>
     <p class="message">{t('notfound.message')}</p>
     <a href={localizeUrl('/', lang)} class="btn btn-primary">{t('notfound.home')}</a>
@@ -21,18 +21,23 @@ const t = useTranslations(lang);
 <style>
   .notfound {
     text-align: center;
-    padding-top: var(--space-24);
-    padding-bottom: var(--space-24);
+    padding-top: var(--s10);
+    padding-bottom: var(--s10);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   .code {
-    font-size: clamp(4rem, 12vw, 8rem);
-    font-weight: 800;
-    font-family: var(--font-mono);
-    color: var(--color-accent);
+    font-size: clamp(6rem, 20vw, 12rem);
+    font-weight: 640;
+    font-family: var(--font-display);
+    letter-spacing: -0.04em;
+    color: var(--text);
     line-height: 1;
-    opacity: 0.6;
+    user-select: none;
   }
-  h1 { font-size: 1.5rem; font-weight: 700; margin-top: var(--space-4); }
-  .message { color: var(--color-text-secondary); margin-top: var(--space-3); max-width: 30rem; margin-left: auto; margin-right: auto; }
-  .btn { margin-top: var(--space-8); }
+  .code em { font-style: italic; }
+  h1 { font-size: var(--fs-h2); font-weight: 560; margin-top: var(--s4); }
+  .message { color: var(--text-soft); margin-top: var(--s3); max-width: 30rem; }
+  .btn { margin-top: var(--s7); }
 </style>

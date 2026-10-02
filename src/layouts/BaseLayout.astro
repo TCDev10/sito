@@ -28,7 +28,7 @@ const siteUrl = 'https://tcdev.xyz';
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
 const alternatePath = alternateUrl(Astro.url, lang);
 const alternateFullUrl = new URL(alternatePath, siteUrl).href;
-const fullTitle = title === 'TCDev' ? title : `${title} — TCDev`;
+const fullTitle = title === 'TCDev' ? title : `${title} · TCDev`;
 
 const personSchema = {
   '@context': 'https://schema.org',
@@ -77,6 +77,8 @@ const personSchema = {
     <link rel="icon" href="/favicon.ico" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
+    <link rel="preload" href="/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin />
+
     <script type="application/ld+json" set:html={JSON.stringify(personSchema)}></script>
   </head>
   <body>
@@ -92,17 +94,20 @@ const personSchema = {
 <style>
   .skip-link {
     position: absolute;
-    left: -9999px;
-    top: var(--space-4);
-    z-index: 1000;
-    background: var(--color-accent);
-    color: #fff;
-    padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius-md);
-    font-weight: 500;
+    left: var(--s4);
+    top: -100%;
+    z-index: var(--z-overlay);
+    background: var(--accent);
+    color: var(--text-inverse);
+    padding: var(--s3) var(--s4);
+    border-radius: var(--r-md);
+    font-weight: 600;
+    font-size: var(--fs-small);
     text-decoration: none;
+    transition: top var(--dur-2) var(--ease-out);
   }
-  .skip-link:focus {
-    left: var(--space-4);
+  .skip-link:focus-visible {
+    top: var(--s4);
+    outline-color: var(--text);
   }
 </style>

@@ -19,11 +19,13 @@ const featured = projects
 
 <BaseLayout lang={lang} title={t('home.title')} description={t('home.description')}>
   <section class="hero container">
-    <p class="hero-greeting">{t('hero.greeting')}</p>
-    <h1 class="hero-name">TC<span class="hero-accent">Dev</span></h1>
-    <p class="hero-subtitle">{t('hero.subtitle')}</p>
-    <p class="hero-bio">{t('hero.bio')}</p>
-    <div class="hero-cta">
+    <p class="eyebrow animate-rise">{t('hero.greeting')}</p>
+    <h1 class="hero-title animate-rise" style="animation-delay: 60ms">
+      {t('hero.title.a')} <em class="accent-italic">{t('hero.title.b')}</em><br />
+      {t('hero.title.c')} <em class="accent-italic">{t('hero.title.d')}</em>
+    </h1>
+    <p class="hero-bio animate-rise" style="animation-delay: 140ms">{t('hero.bio')}</p>
+    <div class="hero-cta animate-rise" style="animation-delay: 220ms">
       <a href={localizeUrl('/progetti', lang)} class="btn btn-primary">{t('hero.cta.projects')}</a>
       <a href={localizeUrl('/foto', lang)} class="btn btn-ghost">{t('hero.cta.photos')}</a>
     </div>
@@ -31,18 +33,30 @@ const featured = projects
 
   <section class="section container">
     <div class="section-head">
-      <h2>{t('home.featured')}</h2>
-      <a href={localizeUrl('/progetti', lang)} class="section-link">{t('home.viewall')} →</a>
+      <div>
+        <p class="eyebrow" aria-hidden="true">01</p>
+        <h2>{t('home.featured')}</h2>
+      </div>
+      <a href={localizeUrl('/progetti', lang)} class="section-link">
+        {t('home.viewall.projects')} <span aria-hidden="true">→</span>
+      </a>
     </div>
-    <div class="featured-grid">
-      {featured.map((p) => <ProjectCard project={p} lang={lang} />)}
-    </div>
+    <ol class="featured-list">
+      {featured.map((p, i) => (
+        <ProjectCard project={p} lang={lang} index={i + 1} variant="row" />
+      ))}
+    </ol>
   </section>
 
   <section class="section container">
     <div class="section-head">
-      <h2>{t('home.latest')}</h2>
-      <a href={localizeUrl('/foto', lang)} class="section-link">{t('home.viewall')} →</a>
+      <div>
+        <p class="eyebrow" aria-hidden="true">02</p>
+        <h2>{t('home.latest')}</h2>
+      </div>
+      <a href={localizeUrl('/foto', lang)} class="section-link">
+        {t('home.viewall.photos')} <span aria-hidden="true">→</span>
+      </a>
     </div>
     <div class="photo-strip" id="home-photo-strip" data-media-base={Astro.site ? new URL('/media/', Astro.site).href : '/media/'}>
       <p class="photo-empty">{t('photos.empty')}</p>
@@ -51,22 +65,76 @@ const featured = projects
 </BaseLayout>
 
 <style>
-  .hero { padding-top: var(--space-24); padding-bottom: var(--space-16); }
-  .hero-greeting { color: var(--color-accent); font-family: var(--font-mono); font-size: 0.95rem; margin-bottom: var(--space-3); }
-  .hero-name { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; }
-  .hero-accent { color: var(--color-accent); }
-  .hero-subtitle { font-size: clamp(1.15rem, 2.5vw, 1.5rem); color: var(--color-text-primary); font-weight: 500; margin-top: var(--space-3); }
-  .hero-bio { max-width: 42rem; color: var(--color-text-secondary); line-height: 1.7; margin-top: var(--space-4); }
-  .hero-cta { display: flex; gap: var(--space-3); margin-top: var(--space-8); flex-wrap: wrap; }
+  .hero {
+    padding-top: var(--s9);
+    padding-bottom: var(--s9);
+  }
+  .hero-title {
+    font-size: var(--fs-display);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+    margin-top: var(--s4);
+    max-width: 14ch;
+  }
+  .hero-bio {
+    max-width: 40rem;
+    font-size: var(--fs-lede);
+    color: var(--text-soft);
+    line-height: 1.6;
+    margin-top: var(--s5);
+  }
+  .hero-cta {
+    display: flex;
+    gap: var(--s3);
+    margin-top: var(--s7);
+    flex-wrap: wrap;
+  }
 
-  .section { padding-top: var(--space-8); }
-  .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: var(--space-6); }
-  .section-head h2 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
-  .section-link { color: var(--color-accent); text-decoration: none; font-size: 0.9rem; }
-  .section-link:hover { color: var(--color-blue-300); }
-  .featured-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-4); }
-  .photo-strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--space-3); }
-  .photo-empty { color: var(--color-text-muted); font-size: 0.9rem; grid-column: 1 / -1; }
+  .section { padding-top: var(--s8); }
+  .section-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--s4);
+    padding-bottom: var(--s4);
+    border-bottom: 1px solid var(--hair);
+    margin-bottom: var(--s5);
+  }
+  .section-head h2 { margin-top: var(--s2); }
+  .section-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s2);
+    min-height: 44px;
+    color: var(--text-soft);
+    text-decoration: none;
+    font-size: var(--fs-small);
+    white-space: nowrap;
+    transition: color var(--dur-1) var(--ease-out);
+  }
+  .section-link:hover { color: var(--accent); }
+
+  .featured-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .photo-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--s3);
+    min-height: 180px;
+  }
+  .photo-strip a { border-radius: var(--r-md); overflow: hidden; aspect-ratio: 1; display: block; }
+  .photo-strip img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+  .photo-strip a:hover img { transform: scale(1.04); }
+  .photo-empty { color: var(--text-muted); font-size: var(--fs-small); grid-column: 1 / -1; }
 </style>
 
 <script>
@@ -87,7 +155,6 @@ const featured = projects
           img.src = `${base}${p.file}`;
           img.alt = p.caption ?? '';
           img.loading = 'lazy';
-          img.style.cssText = 'width:100%;aspect-ratio:1;object-fit:cover;border-radius:0.625rem;display:block;';
           a.appendChild(img);
           strip.appendChild(a);
         }

@@ -5,8 +5,10 @@ import { useTranslations, type Lang } from '../i18n/ui';
 interface Props {
   project: CollectionEntry<'projects'>;
   lang: Lang;
+  index?: number;
+  variant?: 'row' | 'grid';
 }
-const { project, lang } = Astro.props;
+const { project, lang, index, variant = 'grid' } = Astro.props;
 const t = useTranslations(lang);
 
 const { title, excerpt, excerptEn, stack, status, repoUrl, demoUrl } = project.data;
@@ -18,27 +20,40 @@ const statusLabel: Record<string, string> = {
   comingsoon: t('projects.comingsoon'),
   archived: t('projects.archived'),
 };
+
+const isComing = status === 'comingsoon';
 ---
 
-<article class={`proj-card ${status === 'comingsoon' ? 'comingsoon' : ''}`}>
-  <div class="proj-head">
-    <h3 class="proj-title">{title}</h3>
-    {status && status !== 'active' && (
-      <span class={`status-pill status-${status}`}>{statusLabel[status]}</span>
+<article class={`proj-card variant-${variant} ${isComing ? 'is-coming' : ''}`}>
+  <div class="proj-main">
+    {typeof index === 'number' && (
+      <span class="proj-index" aria-hidden="true">{String(index).padStart(2, '0')}</span>
     )}
-  </div>
-  <p class="proj-desc">{desc}</p>
-  {stack && stack.length > 0 && (
-    <div class="proj-stack">
-      {stack.map((tech) => <span class="tech-chip">{tech}</span>)}
+    <div class="proj-body">
+      <div class="proj-head">
+        <h3 class="proj-title">{title}</h3>
+        {status && status !== 'active' && (
+          <span class={`badge status-${status}`}>{statusLabel[status]}</span>
+        )}
+      </div>
+      <p class="proj-desc">{desc}</p>
+      {stack && stack.length > 0 && (
+        <ul class="proj-stack" aria-label="Stack">
+          {stack.map((tech) => <li class="tech-chip">{tech}</li>)}
+        </ul>
+      )}
     </div>
-  )}
+  </div>
   {(repoUrl || demoUrl) && (
     <div class="proj-links">
-      {repoUrl && <a href={repoUrl} target="_blank" rel="noopener noreferrer" class="proj-link">GitHub ↗</a>}
+      {repoUrl && (
+        <a href={repoUrl} target="_blank" rel="noopener noreferrer" class="proj-link">
+          {t('projects.repo')} <span aria-hidden="true">↗</span>
+        </a>
+      )}
       {demoUrl && (
         <a href={demoUrl} target="_blank" rel="noopener noreferrer" class="proj-link primary">
-          {t('projects.visit')} ↗
+          {t('projects.visit')} <span aria-hidden="true">↗</span>
         </a>
       )}
     </div>
@@ -47,52 +62,102 @@ const statusLabel: Record<string, string> = {
 
 <style>
   .proj-card {
-    background: var(--color-bg-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: var(--space-6);
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
-    transition: border-color var(--transition-base), transform var(--transition-base);
+    gap: var(--s4);
   }
-  .proj-card:hover { border-color: var(--color-accent); transform: translateY(-2px); }
-  .proj-card.comingsoon { opacity: 0.65; border-style: dashed; }
-  .proj-head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
-  .proj-title { margin: 0; font-size: 1.15rem; font-weight: 600; letter-spacing: -0.02em; }
-  .status-pill {
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 2px 10px;
-    border-radius: var(--radius-full);
-    border: 1px solid var(--color-border);
-    color: var(--color-text-secondary);
-    white-space: nowrap;
+  .proj-main {
+    display: flex;
+    gap: var(--s5);
+    align-items: baseline;
   }
-  .status-wip { color: var(--color-yellow); border-color: var(--color-yellow); }
-  .status-comingsoon { color: var(--color-purple); border-color: var(--color-purple); }
-  .status-archived { color: var(--color-text-muted); }
-  .proj-desc { margin: 0; color: var(--color-text-secondary); font-size: 0.925rem; line-height: 1.6; }
-  .proj-stack { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-  .tech-chip {
-    font-size: 0.75rem;
+  .proj-index {
     font-family: var(--font-mono);
-    padding: 2px 10px;
-    border-radius: var(--radius-full);
-    background: var(--color-bg-elevated);
-    color: var(--color-blue-300);
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    flex-shrink: 0;
+    padding-top: 0.35em;
   }
-  .proj-links { display: flex; gap: var(--space-4); margin-top: auto; }
+  .proj-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s2);
+    min-width: 0;
+  }
+  .proj-head {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--s3);
+  }
+  .proj-title {
+    font-size: var(--fs-h3);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+  .proj-desc {
+    margin: 0;
+    color: var(--text-soft);
+    font-size: var(--fs-small);
+    line-height: 1.6;
+    max-width: 52ch;
+  }
+  .proj-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s2);
+    list-style: none;
+    padding: 0;
+    margin-top: var(--s1);
+  }
+  .tech-chip {
+    font-size: var(--fs-xs);
+    font-family: var(--font-mono);
+    padding: 3px 10px;
+    border-radius: var(--r-full);
+    background: var(--surface);
+    border: 1px solid var(--hair-soft);
+    color: var(--text-soft);
+  }
+  .proj-links {
+    display: flex;
+    gap: var(--s5);
+  }
   .proj-link {
-    font-size: 0.875rem;
+    font-size: var(--fs-small);
     font-weight: 500;
-    color: var(--color-text-secondary);
+    color: var(--text-soft);
     text-decoration: none;
-    transition: color var(--transition-fast);
+    transition: color var(--dur-1) var(--ease-out);
   }
-  .proj-link:hover { color: var(--color-text-primary); }
-  .proj-link.primary { color: var(--color-accent); }
-  .proj-link.primary:hover { color: var(--color-blue-300); }
+  .proj-link:hover { color: var(--text); }
+  .proj-link.primary { color: var(--accent); }
+  .proj-link.primary:hover { color: var(--accent-strong); }
+
+  /* Row variant: editorial ruled list (home featured) */
+  .variant-row {
+    padding: var(--s5) 0;
+    border-bottom: 1px solid var(--hair-soft);
+    transition: background-color var(--dur-2) var(--ease-out);
+  }
+  .variant-row:hover { background: var(--bg-soft); }
+  .variant-row .proj-links { padding-left: calc(var(--s5) + 2ch); }
+
+  /* Grid variant: on the projects page */
+  .variant-grid {
+    background: var(--surface);
+    border: 1px solid var(--hair-soft);
+    border-radius: var(--r-lg);
+    padding: var(--s5);
+    transition: border-color var(--dur-2) var(--ease-out), background-color var(--dur-2) var(--ease-out);
+  }
+  .variant-grid:hover { border-color: var(--hair); background: var(--surface-2); }
+  .variant-grid .proj-links { margin-top: auto; }
+
+  .is-coming { opacity: 0.72; }
+  .is-coming .proj-title { color: var(--text-soft); }
+
+  .status-wip      { color: var(--warn);   border-color: color-mix(in srgb, var(--warn) 40%, transparent); }
+  .status-comingsoon { color: var(--violet); border-color: color-mix(in srgb, var(--violet) 40%, transparent); }
+  .status-archived { color: var(--text-muted); }
 </style>

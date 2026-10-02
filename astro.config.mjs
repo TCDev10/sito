@@ -1,6 +1,5 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import remarkGfm from 'remark-gfm';
 import remarkSmartypants from 'remark-smartypants';
@@ -18,9 +17,6 @@ export default defineConfig({
     routing: {
       prefixDefaultLocale: false,
     },
-  },
-  vite: {
-    plugins: [tailwindcss()],
   },
   integrations: [mdx(), sitemap()],
   markdown: {

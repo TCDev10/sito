@@ -7,5 +7,5 @@ stack: [C#, WinUI 3, .NET 10, Git]
 status: wip
 repoUrl: https://github.com/TCDev10/GameSync
 featured: true
-order: 2
+order: 3
 ---
