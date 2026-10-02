@@ -105,43 +105,99 @@ export const prerender = false;
 
       button {
         display: inline-flex;
-        min-height: 2.75rem;
+        min-height: 2.85rem;
         width: auto;
         align-items: center;
         justify-content: center;
         gap: 0.45rem;
-        padding: 0.65rem 1.25rem;
+        padding: 0.7rem 1.35rem;
         color: var(--ink);
         font: inherit;
-        font-size: 0.875rem;
-        font-weight: 600;
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.01em;
         line-height: 1.2;
         background: var(--accent);
-        border: 1px solid transparent;
+        border: 1.5px solid transparent;
         border-radius: 999px;
         cursor: pointer;
-        transition: border-color 0.15s ease, background-color 0.15s ease, filter 0.15s ease, color 0.15s ease;
+        transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
       }
 
-      button:hover:not(:disabled) { filter: brightness(1.08); }
-      button.ghost {
-        color: var(--text);
-        background: rgb(27 30 39 / 0.6);
-        border-color: var(--line);
-      }
-      button.ghost:hover:not(:disabled) { border-color: rgb(125 211 192 / 0.55); filter: none; }
-      button.danger {
-        color: var(--danger);
-        background: rgb(240 113 120 / 0.1);
-        border-color: rgb(240 113 120 / 0.45);
-      }
-      button.danger:hover:not(:disabled) { color: #111; background: var(--danger); border-color: var(--danger); filter: none; }
-      button:disabled { opacity: 0.55; cursor: not-allowed; }
+      button:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
+      button:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
       button[aria-busy="true"] { position: relative; }
+
+      /* Primary solid accent — Foto / Crea */
+      button.btn-primary {
+        color: #0a0b0e;
+        background: var(--accent);
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px rgb(125 211 192 / 0.25), 0 8px 20px rgb(125 211 192 / 0.18);
+      }
+      button.btn-primary:hover:not(:disabled) {
+        background: #93e0d0;
+        border-color: #93e0d0;
+        filter: none;
+      }
+      button.btn-primary[aria-expanded="true"] {
+        color: var(--accent);
+        background: transparent;
+        border-color: var(--accent);
+        box-shadow: none;
+      }
+
+      /* Outlined ghost — Rinomina / Aggiorna / Blocca */
+      button.btn-ghost {
+        color: var(--text);
+        background: transparent;
+        border-color: rgb(232 235 242 / 0.28);
+        box-shadow: none;
+      }
+      button.btn-ghost:hover:not(:disabled) {
+        color: var(--text);
+        background: rgb(232 235 242 / 0.06);
+        border-color: rgb(232 235 242 / 0.55);
+        filter: none;
+      }
+
+      /* Soft danger outline — Archivia */
+      button.btn-danger {
+        color: #ff9aa1;
+        background: rgb(240 113 120 / 0.08);
+        border-color: rgb(240 113 120 / 0.65);
+        box-shadow: none;
+      }
+      button.btn-danger:hover:not(:disabled) {
+        color: #0a0b0e;
+        background: var(--danger);
+        border-color: var(--danger);
+        filter: none;
+      }
+
+      /* Accent outline — Ripristina */
+      button.btn-restore {
+        color: var(--accent);
+        background: rgb(125 211 192 / 0.08);
+        border-color: rgb(125 211 192 / 0.7);
+        box-shadow: none;
+      }
+      button.btn-restore:hover:not(:disabled) {
+        color: #0a0b0e;
+        background: var(--accent);
+        border-color: var(--accent);
+        filter: none;
+      }
+
+      /* Legacy aliases kept for any leftover markup */
+      button.ghost { color: var(--text); background: transparent; border-color: rgb(232 235 242 / 0.28); }
+      button.ghost:hover:not(:disabled) { background: rgb(232 235 242 / 0.06); border-color: rgb(232 235 242 / 0.55); filter: none; }
+      button.danger { color: #ff9aa1; background: rgb(240 113 120 / 0.08); border-color: rgb(240 113 120 / 0.65); }
+      button.danger:hover:not(:disabled) { color: #0a0b0e; background: var(--danger); border-color: var(--danger); filter: none; }
 
       .row { display: grid; gap: 0.85rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
       .row > button { justify-self: start; }
-      .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 1rem; }
+      .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem; margin-top: 1rem; }
       .actions button { flex: 0 0 auto; }
 
       .drop {
@@ -168,10 +224,10 @@ export const prerender = false;
       .album > div:first-child { min-width: 0; }
       .album > div:first-child strong { display: inline-block; margin-right: 0.35rem; }
       .album > .actions { margin-top: 0; flex-shrink: 0; justify-content: flex-end; }
-      .album-actions { gap: 0.6rem; }
+      .album-actions { gap: 0.55rem; }
       .album-actions button {
-        min-height: 2.75rem;
-        padding: 0.65rem 1.1rem;
+        min-height: 2.85rem;
+        padding: 0.7rem 1.2rem;
         border-radius: 999px;
         white-space: nowrap;
       }
@@ -211,26 +267,29 @@ export const prerender = false;
       .album-block { padding: 0.85rem 0; border-top: 1px solid var(--line); }
       .album-block:first-child { border-top: none; }
       .photos-panel {
-        max-height: 50vh;
-        margin-top: 0.75rem;
-        padding: 0.85rem;
+        max-height: 55vh;
+        margin-top: 0.85rem;
+        padding: 0.95rem;
         overflow-y: auto;
         background: rgb(20 22 28 / 0.72);
         border: 1px solid var(--line);
         border-radius: 0.9rem;
       }
 
+      /* Masonry like public /photos/[album] */
       .photo-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(120px, 1fr));
-        gap: 0.65rem;
+        columns: 1;
+        column-gap: 1rem;
         margin-top: 0.15rem;
       }
-      @media (min-width: 700px) {
-        .photo-grid { grid-template-columns: repeat(3, minmax(120px, 1fr)); }
+      @media (min-width: 640px) {
+        .photo-grid { columns: 2; }
       }
-      @media (min-width: 900px) {
-        .photo-grid { grid-template-columns: repeat(4, minmax(120px, 1fr)); }
+      @media (min-width: 1024px) {
+        .photo-grid { columns: 3; }
+      }
+      @media (min-width: 1280px) {
+        .photo-grid { columns: 4; }
       }
       @media (max-width: 640px) {
         header { padding-top: 2rem; }
@@ -241,7 +300,10 @@ export const prerender = false;
 
       .photo-card {
         position: relative;
-        min-width: 0;
+        display: block;
+        width: 100%;
+        margin: 0 0 1rem;
+        break-inside: avoid;
         overflow: hidden;
         background: var(--panel-2);
         border: 1px solid var(--line);
@@ -253,7 +315,6 @@ export const prerender = false;
         width: 100%;
         max-width: 100%;
         height: auto;
-        aspect-ratio: 4 / 3;
         object-fit: cover;
       }
       .photo-card .cover-star {
@@ -262,25 +323,46 @@ export const prerender = false;
         right: 0.625rem;
         z-index: 1;
         display: grid;
+        place-items: center;
         width: 2.5rem;
         min-height: 2.5rem;
         height: 2.5rem;
         padding: 0;
         color: var(--text);
-        font-size: 1.5rem;
+        font-size: 1.35rem;
         line-height: 1;
         background: rgb(12 13 16 / 78%);
         border: 1px solid var(--line);
+        border-radius: 999px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s ease, color 0.15s ease, background-color 0.15s ease;
       }
-      .photo-card .cover-star:hover:not(:disabled) { color: var(--accent); background: rgb(12 13 16 / 90%); filter: none; }
+      .photo-card:hover .cover-star,
+      .photo-card:focus-within .cover-star,
+      .photo-card .cover-star.is-cover {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .photo-card .cover-star:hover:not(:disabled) { color: var(--accent); background: rgb(12 13 16 / 90%); filter: none; transform: none; }
       .photo-card .cover-star.is-cover { color: var(--ink); background: var(--accent); border-color: var(--accent); }
+      .ui-ver {
+        display: inline-block;
+        margin-left: 0.45rem;
+        color: var(--mute);
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.85;
+      }
       .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
     </style>
   </head>
   <body>
     <header>
       <p class="eyebrow">Workspace privato</p>
-      <h1>Portfolio admin</h1>
+      <h1>Portfolio admin <span class="ui-ver">UI v2</span></h1>
       <p class="muted">Gestisci album, copertine e upload. Le immagini vengono ridimensionate e convertite in WebP nel browser.</p>
       <p id="mode" class="muted"></p>
     </header>
@@ -289,7 +371,7 @@ export const prerender = false;
         <label for="token">Token admin</label>
         <div class="row">
           <input id="token" type="password" autocomplete="current-password" placeholder="ADMIN_TOKEN" />
-          <button id="loginBtn" type="button">Sblocca</button>
+          <button id="loginBtn" class="btn-primary" type="button">Sblocca</button>
         </div>
       </section>
 
@@ -317,9 +399,9 @@ export const prerender = false;
             </div>
           </div>
           <div class="actions">
-            <button id="createAlbum" type="button">Crea</button>
-            <button id="refresh" class="ghost" type="button">Aggiorna</button>
-            <button id="logout" class="ghost" type="button">Blocca</button>
+            <button id="createAlbum" class="btn-primary" type="button">Crea</button>
+            <button id="refresh" class="btn-ghost" type="button">Aggiorna</button>
+            <button id="logout" class="btn-ghost" type="button">Blocca</button>
           </div>
         </div>
 
@@ -401,14 +483,14 @@ export const prerender = false;
           actions.className = 'actions album-actions';
 
           const photosBtn = document.createElement('button');
-          photosBtn.className = 'ghost';
+          photosBtn.className = 'btn-primary photos-toggle';
           photosBtn.type = 'button';
           photosBtn.textContent = 'Foto';
           photosBtn.setAttribute('aria-expanded', 'false');
           photosBtn.onclick = () => toggleAlbumPhotos(album.id, block).catch((e) => alert(e.message));
 
           const rename = document.createElement('button');
-          rename.className = 'ghost';
+          rename.className = 'btn-ghost';
           rename.type = 'button';
           rename.textContent = 'Rinomina';
           rename.onclick = async () => {
@@ -420,7 +502,7 @@ export const prerender = false;
           };
 
           const archive = document.createElement('button');
-          archive.className = album.archived ? 'ghost' : 'danger';
+          archive.className = album.archived ? 'btn-restore' : 'btn-danger';
           archive.type = 'button';
           archive.textContent = album.archived ? 'Ripristina' : 'Archivia';
           archive.onclick = async () => {
@@ -454,19 +536,29 @@ export const prerender = false;
 
       async function toggleAlbumPhotos(albumId, block) {
         const panel = block.querySelector('.photos-panel');
-        const photosBtn = block.querySelector('.album-actions button');
+        const photosBtn = block.querySelector('.photos-toggle');
         if (!panel.classList.contains('hidden')) {
           panel.classList.add('hidden');
-          photosBtn?.setAttribute('aria-expanded', 'false');
+          if (photosBtn) {
+            photosBtn.setAttribute('aria-expanded', 'false');
+            photosBtn.textContent = 'Foto';
+          }
           return;
         }
         for (const otherPanel of document.querySelectorAll('.photos-panel')) {
           if (otherPanel === panel) continue;
           otherPanel.classList.add('hidden');
-          otherPanel.closest('.album-block')?.querySelector('.album-actions button')?.setAttribute('aria-expanded', 'false');
+          const otherBtn = otherPanel.closest('.album-block')?.querySelector('.photos-toggle');
+          if (otherBtn) {
+            otherBtn.setAttribute('aria-expanded', 'false');
+            otherBtn.textContent = 'Foto';
+          }
         }
         panel.classList.remove('hidden');
-        photosBtn?.setAttribute('aria-expanded', 'true');
+        if (photosBtn) {
+          photosBtn.setAttribute('aria-expanded', 'true');
+          photosBtn.textContent = 'Chiudi';
+        }
         panel.innerHTML = '<p class="muted">Caricamento foto…</p>';
         const data = await api(`/api/albums/${albumId}`);
         const album = data.album;
