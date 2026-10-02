@@ -2,6 +2,7 @@ User-agent: *
 Allow: /
 Allow: /llms.txt
 Allow: /llms-full.txt
+Allow: /.well-known/ai-catalog.json
 Disallow: /admin
 Disallow: /admin/
 Disallow: /api/
@@ -10,3 +11,4 @@ Disallow: /api/
 # Full summary: https://tcdev.xyz/llms-full.txt
 
 Sitemap: https://tcdev.xyz/sitemap-index.xml
+Agentmap: https://tcdev.xyz/.well-known/ai-catalog.json

@@ -40,6 +40,7 @@ Bios stay locked (no surname, no em dashes). Contacts: email@tcdev.xyz, IG TCDev
 - Key facts remain in **visible HTML**, not only llms files.
 - `rel="describedby"` → `/llms.txt`; robots still Allows both files.
 - Added standard `/.well-known/security.txt` (RFC 9116 contact). No invented well-known “standards”.
+- **Agentic Resource Discovery / AI Catalog**: `/.well-known/ai-catalog.json` (AICatalogManifest `specVersion` 1.0) lists llms, llms-full, and IT/EN home HTML entries with `urn:air:` ids and representativeQueries. Discovery signals: `Agentmap:` in robots.txt, HTML `<link rel="ai-catalog">` in BaseLayout, HTTP `Link` on `/*`. WebMCP skipped (static portfolio; origin trial / little value).
 
 ### Performance / crawl hygiene
 
