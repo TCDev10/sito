@@ -35,7 +35,7 @@ export const prerender = false;
         font-family: ui-sans-serif, system-ui, sans-serif;
       }
 
-      header, main { width: min(100% - 2rem, 960px); margin: 0 auto; }
+      header, main { width: min(100% - 2.5rem, 72rem); margin: 0 auto; }
       header { padding: 2.5rem 0 1rem; }
       main { padding: 0 0 3rem; }
 
@@ -189,12 +189,6 @@ export const prerender = false;
         filter: none;
       }
 
-      /* Legacy aliases kept for any leftover markup */
-      button.ghost { color: var(--text); background: transparent; border-color: rgb(232 235 242 / 0.28); }
-      button.ghost:hover:not(:disabled) { background: rgb(232 235 242 / 0.06); border-color: rgb(232 235 242 / 0.55); filter: none; }
-      button.danger { color: #ff9aa1; background: rgb(240 113 120 / 0.08); border-color: rgb(240 113 120 / 0.65); }
-      button.danger:hover:not(:disabled) { color: #0a0b0e; background: var(--danger); border-color: var(--danger); filter: none; }
-
       .row { display: grid; gap: 0.85rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
       .row > button { justify-self: start; }
       .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem; margin-top: 1rem; }
@@ -295,62 +289,67 @@ export const prerender = false;
         border-top: 1px solid var(--line);
         min-width: 0;
         max-width: 100%;
-        overflow: hidden;
+        overflow: visible;
       }
       .album-block:first-child { border-top: none; }
+      /* Open album gallery — mirrors public /[lang]/photos/[album] */
       .photos-panel {
         max-width: 100%;
-        max-height: 55vh;
-        margin-top: 0.85rem;
-        padding: 0.95rem;
+        margin-top: 1.25rem;
+        padding: 0;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        overflow: visible;
+      }
+      .photos-panel.is-scrollable {
+        max-height: min(78vh, 56rem);
         overflow-x: hidden;
         overflow-y: auto;
-        background: rgb(20 22 28 / 0.72);
-        border: 1px solid var(--line);
-        border-radius: 0.9rem;
+        padding-right: 0.15rem;
       }
 
-      /* Masonry like public /photos/[album] */
-      .photo-grid {
+      /* Exact public masonry: columns-1 sm:2 lg:3 xl:4, gap-4 */
+      .photos-masonry {
         width: 100%;
         max-width: 100%;
+        margin: 0;
+        padding: 0;
+        list-style: none;
         columns: 1;
         column-gap: 1rem;
-        margin-top: 0.15rem;
       }
       @media (min-width: 640px) {
-        .photo-grid { columns: 2; }
+        .photos-masonry { columns: 2; }
       }
       @media (min-width: 1024px) {
-        .photo-grid { columns: 3; }
+        .photos-masonry { columns: 3; }
       }
       @media (min-width: 1280px) {
-        .photo-grid { columns: 4; }
-      }
-      @media (max-width: 640px) {
-        header { padding-top: 2rem; }
-        .card { padding: 1rem; }
-        .album { flex-direction: column; }
-        .album > .actions { width: 100%; justify-content: flex-start; }
+        .photos-masonry { columns: 4; }
       }
 
-      .photo-card {
+      .photos-masonry > li {
         position: relative;
         display: block;
         width: 100%;
         max-width: 100%;
         min-width: 0;
         margin: 0 0 1rem;
+        padding: 0;
         break-inside: avoid;
         -webkit-column-break-inside: avoid;
         page-break-inside: avoid;
         overflow: hidden;
-        background: var(--panel-2);
+        background: var(--panel);
         border: 1px solid var(--line);
-        border-radius: 1rem;
+        border-radius: 1rem; /* rounded-2xl */
       }
-      .photo-card.is-cover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-      .photo-card img {
+      .photos-masonry > li.is-cover {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px var(--accent);
+      }
+      .photos-masonry > li img {
         display: block;
         width: 100%;
         max-width: 100%;
@@ -358,7 +357,9 @@ export const prerender = false;
         object-fit: cover;
         vertical-align: top;
       }
-      .photo-card .cover-star {
+
+      /* Cover star: top-right, hover/focus only (always visible when cover) */
+      .photos-masonry .cover-star {
         position: absolute;
         top: 0.625rem;
         right: 0.625rem;
@@ -377,16 +378,34 @@ export const prerender = false;
         border-radius: 999px;
         opacity: 0;
         pointer-events: none;
+        box-shadow: none;
         transition: opacity 0.15s ease, color 0.15s ease, background-color 0.15s ease;
       }
-      .photo-card:hover .cover-star,
-      .photo-card:focus-within .cover-star,
-      .photo-card .cover-star.is-cover {
+      .photos-masonry > li:hover .cover-star,
+      .photos-masonry > li:focus-within .cover-star,
+      .photos-masonry .cover-star.is-cover {
         opacity: 1;
         pointer-events: auto;
       }
-      .photo-card .cover-star:hover:not(:disabled) { color: var(--accent); background: rgb(12 13 16 / 90%); filter: none; transform: none; }
-      .photo-card .cover-star.is-cover { color: var(--ink); background: var(--accent); border-color: var(--accent); }
+      .photos-masonry .cover-star:hover:not(:disabled) {
+        color: var(--accent);
+        background: rgb(12 13 16 / 90%);
+        filter: none;
+        transform: none;
+      }
+      .photos-masonry .cover-star.is-cover {
+        color: var(--ink);
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
+      @media (max-width: 640px) {
+        header { padding-top: 2rem; }
+        .card { padding: 1rem; }
+        .album { flex-direction: column; }
+        .album > .actions { width: 100%; justify-content: flex-start; }
+      }
+
       .ui-ver {
         display: inline-block;
         margin-left: 0.45rem;
@@ -403,7 +422,7 @@ export const prerender = false;
   <body>
     <header>
       <p class="eyebrow">Workspace privato</p>
-      <h1>Portfolio admin <span class="ui-ver">UI v3</span></h1>
+      <h1>Portfolio admin <span class="ui-ver">UI v4</span></h1>
       <p class="muted">Gestisci album, copertine e upload. Le immagini vengono ridimensionate e convertite in WebP nel browser.</p>
       <p id="mode" class="muted"></p>
     </header>
@@ -613,20 +632,27 @@ export const prerender = false;
 
       function renderPhotoGrid(panel, album, photos) {
         panel.innerHTML = '';
+        panel.classList.remove('is-scrollable');
         if (!photos.length) {
           panel.innerHTML = '<p class="empty">Nessuna foto in questo album.</p>';
           return;
         }
-        const grid = document.createElement('div');
-        grid.className = 'photo-grid';
+        if (photos.length > 8) panel.classList.add('is-scrollable');
+
+        const grid = document.createElement('ul');
+        grid.className = 'photos-masonry';
         for (const photo of photos) {
           const isCover = album.coverPhotoId === photo.id;
-          const card = document.createElement('div');
-          card.className = 'photo-card' + (isCover ? ' is-cover' : '');
+          const card = document.createElement('li');
+          card.className = isCover ? 'is-cover' : '';
+
           const img = document.createElement('img');
           img.src = photo.url;
           img.alt = '';
           img.loading = 'lazy';
+          img.decoding = 'async';
+          if (photo.width) img.width = photo.width;
+          if (photo.height) img.height = photo.height;
           card.append(img);
 
           const coverBtn = document.createElement('button');
@@ -645,7 +671,6 @@ export const prerender = false;
               const idx = state.albums.findIndex((a) => a.id === album.id);
               if (idx >= 0) state.albums[idx] = data.album;
               renderPhotoGrid(panel, data.album, data.photos || photos);
-              // Refresh album row badges without collapsing other panels
               refreshAlbumBadges();
             } catch (e) {
               alert(e.message);
