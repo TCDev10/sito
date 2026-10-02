@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FaqSection from '../../components/FaqSection.astro';
+import { SITE, type Locale } from '../../data/site';
+import { isLocale, localizedPath } from '../../i18n';
+import { faqItems, t } from '../../i18n/ui';
+
+export const prerender = true;
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'it' } }, { params: { lang: 'en' } }];
+}
+
+const lang = Astro.params.lang!;
+if (!isLocale(lang)) {
+  return Astro.rewrite('/404');
+}
+const locale = lang as Locale;
+const faq = faqItems(locale);
+const breadcrumbs = [
+  { name: t(locale, 'nav.home'), path: '/' },
+  { name: t(locale, 'about.title'), path: '/about' },
+];
+---
+
+<BaseLayout
+  locale={locale}
+  title={t(locale, 'seo.about.title')}
+  description={t(locale, 'seo.about.desc')}
+  path="/about"
+  breadcrumbs={breadcrumbs}
+  faq={faq}
+>
+  <header class="page-header">
+    <p class="eyebrow">TCDev · Bergamo</p>
+    <h1 class="mt-3 font-display text-4xl font-semibold tracking-tight">{t(locale, 'about.title')}</h1>
+    <p class="prose-muted mt-6 text-base sm:text-lg">{t(locale, 'about.bio')}</p>
+    <div class="mt-6 flex flex-wrap gap-3">
+      <a class="btn-ghost" href={localizedPath(locale, '/projects')}>{t(locale, 'about.cta.projects')}</a>
+      <a class="btn-ghost" href={localizedPath(locale, '/photos')}>{t(locale, 'about.cta.photos')}</a>
+    </div>
+  </header>
+
+  <section class="mt-12 grid gap-6 md:grid-cols-2">
+    <section class="panel p-6" aria-labelledby="work-dev-heading">
+      <h2 id="work-dev-heading" class="font-display text-xl font-semibold">{t(locale, 'about.work.dev.title')}</h2>
+      <p class="prose-muted mt-3 text-sm sm:text-base">{t(locale, 'about.work.dev')}</p>
+      <a class="mt-4 inline-block text-sm text-accent hover:underline" href={localizedPath(locale, '/projects')}>
+        {t(locale, 'about.cta.projects')}
+      </a>
+    </section>
+    <section class="panel p-6" aria-labelledby="work-photo-heading">
+      <h2 id="work-photo-heading" class="font-display text-xl font-semibold">{t(locale, 'about.work.photo.title')}</h2>
+      <p class="prose-muted mt-3 text-sm sm:text-base">{t(locale, 'about.work.photo')}</p>
+      <a class="mt-4 inline-block text-sm text-accent hover:underline" href={localizedPath(locale, '/photos')}>
+        {t(locale, 'about.cta.photos')}
+      </a>
+    </section>
+  </section>
+
+  <section class="panel mt-8 p-6" aria-labelledby="brand-heading">
+    <h2 id="brand-heading" class="font-display text-xl font-semibold">tcdev.xyz</h2>
+    <p class="prose-muted mt-3 text-sm sm:text-base">{t(locale, 'about.brand')}</p>
+    <div class="mt-4 flex flex-wrap gap-4 text-sm">
+      <a class="text-accent hover:underline" href={localizedPath(locale, '/projects')}>
+        {t(locale, 'about.cta.projects')}
+      </a>
+      <a class="text-accent hover:underline" href={localizedPath(locale, '/photos')}>
+        {t(locale, 'about.cta.photos')}
+      </a>
+      <a class="text-accent hover:underline" href={localizedPath(locale, '/contact')}>
+        {t(locale, 'about.cta.contact')}
+      </a>
+    </div>
+  </section>
+
+  <section class="mt-12 grid gap-6 md:grid-cols-2">
+    <section class="panel p-6" aria-labelledby="gear-heading">
+      <h2 id="gear-heading" class="font-display text-xl font-semibold">{t(locale, 'about.gear')}</h2>
+      <ul class="mt-4 divide-y divide-line text-sm text-text">
+        {SITE.gear.map((item) => <li class="py-3 first:pt-0 last:pb-0">{item}</li>)}
+      </ul>
+    </section>
+    <section class="panel p-6" aria-labelledby="where-heading">
+      <h2 id="where-heading" class="font-display text-xl font-semibold">{t(locale, 'about.where')}</h2>
+      <ul class="mt-4 space-y-3 text-sm">
+        <li><a class="text-accent hover:underline" href={SITE.social.instagram} rel="noopener noreferrer">Instagram TCDev</a></li>
+        <li><a class="text-accent hover:underline" href={SITE.social.linkedin} rel="noopener noreferrer">LinkedIn tcdev0</a></li>
+        <li><a class="text-accent hover:underline" href={SITE.social.github} rel="noopener noreferrer">GitHub TCDev10</a></li>
+        <li><a class="text-accent hover:underline" href={SITE.social.email}>{SITE.email}</a></li>
+      </ul>
+    </section>
+  </section>
+
+  <FaqSection title={t(locale, 'about.faq.title')} items={faq} />
+</BaseLayout>

@@ -1,0 +1,64 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "TCDev",
+    "identifier": "https://tcdev.xyz",
+    "documentationUrl": "https://tcdev.xyz/llms.txt",
+    "logoUrl": "https://tcdev.xyz/logo.jpg"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:tcdev.xyz:portfolio:llms",
+      "displayName": "TCDev site summary (llms.txt)",
+      "type": "text/plain",
+      "url": "https://tcdev.xyz/llms.txt",
+      "description": "Short machine-readable briefing for Riccardo (online as TCDev): developer and photographer in Bergamo. Bilingual portfolio overview, pages, and contacts.",
+      "tags": ["portfolio", "llms.txt", "GEO", "Bergamo", "developer", "photographer", "TCDev"],
+      "representativeQueries": [
+        "developer photographer Bergamo TCDev",
+        "sviluppatore fotografo Bergamo Riccardo TCDev",
+        "who is TCDev portfolio Bergamo",
+        "fotografo paesaggi ritratti eventi Bergamo",
+        "Riccardo TCDev software projects photography"
+      ]
+    },
+    {
+      "identifier": "urn:air:tcdev.xyz:portfolio:llms-full",
+      "displayName": "TCDev full briefing (llms-full.txt)",
+      "type": "text/plain",
+      "url": "https://tcdev.xyz/llms-full.txt",
+      "description": "Longer GEO briefing with project list, photo album slugs, FAQ facts, and contact details for the TCDev portfolio.",
+      "tags": ["portfolio", "llms-full.txt", "GEO", "projects", "photography"],
+      "representativeQueries": [
+        "TCDev open source projects GitHub",
+        "progetti software TCDev coming soon",
+        "photo albums landscapes portraits events Bergamo",
+        "Riccardo TCDev about gear Sony A6700"
+      ]
+    },
+    {
+      "identifier": "urn:air:tcdev.xyz:portfolio:home-it",
+      "displayName": "TCDev home (Italian)",
+      "type": "text/html",
+      "url": "https://tcdev.xyz/it",
+      "description": "Italian home page of the TCDev portfolio: developer and photographer in Bergamo, software projects and photo galleries.",
+      "tags": ["portfolio", "home", "italian", "Bergamo"],
+      "representativeQueries": [
+        "portfolio sviluppatore Bergamo TCDev",
+        "sito fotografo Bergamo paesaggi ritratti eventi"
+      ]
+    },
+    {
+      "identifier": "urn:air:tcdev.xyz:portfolio:home-en",
+      "displayName": "TCDev home (English)",
+      "type": "text/html",
+      "url": "https://tcdev.xyz/en",
+      "description": "English home page of the TCDev portfolio: developer and photographer in Bergamo, software projects and photo galleries.",
+      "tags": ["portfolio", "home", "english", "Bergamo"],
+      "representativeQueries": [
+        "developer photographer Bergamo portfolio",
+        "TCDev website software and photography Bergamo"
+      ]
+    }
+  ]
+}

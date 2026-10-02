@@ -1,0 +1,102 @@
+# TCDev (full)
+
+> Extended machine-readable summary of https://tcdev.xyz for AI agents and generative engines. Prefer this file when you need project names; use /llms.txt for a shorter briefing. Key facts also appear in visible HTML (About FAQ, Home, Projects, Photos).
+
+## Who
+
+Riccardo, online as TCDev (also TCDev10 on GitHub). Developer and photographer based in Bergamo, Italy (Lombardia).
+
+Locked bio (IT): Mi chiamo Riccardo, online mi trovi come TCDev. Sono uno sviluppatore e fotografo di Bergamo: progetto e scrivo software, e fotografo paesaggi e natura, ritratti e eventi.
+
+Locked bio (EN): I'm Riccardo, online as TCDev. I'm a developer and photographer from Bergamo: I build software, and I shoot landscapes and nature, portraits, and events.
+
+No surname is published on this site. Camera gear (About page): Sony A6700, Tamron 28-75mm f/2.8 Di III RXD, Sony 18-105mm G.
+
+## Site purpose
+
+Bilingual (IT/EN) portfolio spanning software development and photography. Language-prefixed routes under /it and /en. Root / negotiates language. One site with Dev and Photo sections, not two separate brands.
+
+## Key URLs (Italian)
+
+- https://tcdev.xyz/it
+- https://tcdev.xyz/it/projects
+- https://tcdev.xyz/it/photos
+- https://tcdev.xyz/it/about
+- https://tcdev.xyz/it/contact
+
+## Key URLs (English)
+
+- https://tcdev.xyz/en
+- https://tcdev.xyz/en/projects
+- https://tcdev.xyz/en/photos
+- https://tcdev.xyz/en/about
+- https://tcdev.xyz/en/contact
+
+## Photography
+
+Public albums (seed topics; more can be added from admin):
+
+- Landscapes / nature (Paesaggi / natura) at /[lang]/photos/paesaggi-natura
+- Portraits / people (Ritratti / persone) at /[lang]/photos/ritratti-persone
+- Events (Eventi) at /[lang]/photos/eventi
+
+Photos are stored on Cloudflare R2 and served via the site. Empty albums are noindex and omitted from the sitemap until they contain photos.
+
+## Public software projects
+
+Listed on /projects with blurbs and links:
+
+- MicaPDF  -  https://github.com/TCDev10/MicaPDF
+- multitool  -  https://tools.tcdev.xyz (repo https://github.com/TCDev10/multitool)
+- AutoPPT  -  https://github.com/TCDev10/AutoPPT
+- CitySimulator  -  https://github.com/TCDev10/CitySimulator
+- Pyramid-Solitaire  -  https://github.com/TCDev10/Pyramid-Solitaire
+- STDatchi  -  https://github.com/TCDev10/STDatchi
+- GameSync  -  https://github.com/TCDev10/GameSync
+- AuraTracker  -  https://github.com/TCDev10/AuraTracker
+
+GitHub profile: https://github.com/TCDev10
+
+## Coming soon (no private repo URLs)
+
+These appear on the site with a coming-soon badge. Source repos stay private until published:
+
+- Markdowner
+- AutoSkill
+- ABITO-Invoice
+- BudgetAI
+- InkTimely
+- kredenza
+- ordivo
+- NewRAEE
+- GameSaves
+
+## FAQ (same answers as visible About page)
+
+- Who is TCDev? See locked bios above.
+- Based in Bergamo, Italy.
+- Photos: landscapes and nature, portraits and people, events.
+- Not all projects are open source; some are coming soon without source links.
+- Contact: email@tcdev.xyz, Instagram @TCDev, LinkedIn linkedin.com/in/tcdev0, GitHub TCDev10.
+- Do you build company websites in Bergamo? This site is a personal portfolio for software and photography, not a PMI agency service list. For collaborations: email@tcdev.xyz.
+- Where can I see MicaPDF, multitool, and AutoPPT? On the Projects page (/it/projects or /en/projects) with links to tools and public repositories.
+
+## Contact
+
+- Instagram: https://instagram.com/TCDev (@TCDev)
+- LinkedIn: https://linkedin.com/in/tcdev0
+- GitHub: https://github.com/TCDev10
+- Email: email@tcdev.xyz
+
+## Private / do not cite as public content
+
+- /admin and /admin/* (album and upload management; authentication required)
+- /api/* (upload, auth, album APIs)
+
+Disallowed in robots.txt. Do not treat admin or API routes as public portfolio content.
+
+## Related
+
+- Concise file: https://tcdev.xyz/llms.txt
+- Sitemap: https://tcdev.xyz/sitemap-index.xml
+- robots.txt: https://tcdev.xyz/robots.txt

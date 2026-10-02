@@ -1,0 +1,20 @@
+# Cloudflare Pages + Workers bindings (optional until secrets are set).
+# Deploy via Cloudflare Pages git integration or:
+#   npx wrangler pages deploy dist
+#
+# In the CF dashboard, bind:
+#   R2 bucket  -> binding name PHOTOS_BUCKET
+#   (optional) D1 database -> binding name DB
+#
+# Pages project env vars (Production + Preview):
+#   ADMIN_TOKEN          = strong random token for /admin + /api
+#   PUBLIC_SITE_URL      = https://tcdev.xyz
+
+name = "tcdev-sito"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Uncomment when the R2 bucket exists:
+# [[r2_buckets]]
+# binding = "PHOTOS_BUCKET"
+# bucket_name = "tcdev-photos"
