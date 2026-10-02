@@ -92,27 +92,37 @@ export const prerender = false;
       .album-block { border-top: 1px solid var(--line); padding: 0.85rem 0; }
       .album-block:first-child { border-top: none; }
       .photo-grid {
-        display: grid; gap: 0.75rem;
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        display: grid;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 1rem;
         margin-top: 0.75rem;
       }
+      @media (min-width: 640px) {
+        .photo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+      @media (min-width: 1024px) {
+        .photo-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      }
+      @media (min-width: 1280px) {
+        .photo-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      }
       .photo-card {
-        position: relative; background: #1b1e27; border: 1px solid var(--line);
-        border-radius: 0.75rem; overflow: hidden;
+        position: relative; min-width: 0; overflow: hidden;
+        background: #1b1e27; border: 1px solid var(--line); border-radius: 1rem;
       }
       .photo-card.is-cover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-      .photo-card img { display: block; width: 100%; aspect-ratio: 4/3; object-fit: cover; }
-      .photo-card .cover-badge {
-        position: absolute; top: 0.4rem; left: 0.4rem;
-        font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em;
-        background: var(--accent); color: #0c0d10; font-weight: 700;
-        padding: 0.15rem 0.45rem; border-radius: 999px;
+      .photo-card img {
+        display: block; width: 100%; max-width: 100%; height: auto; object-fit: cover;
       }
-      .photo-card .photo-actions {
-        display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0.45rem;
+      .photo-card .cover-star {
+        position: absolute; top: 0.625rem; right: 0.625rem; z-index: 1;
+        display: grid; place-items: center; width: 2.5rem; height: 2.5rem;
+        padding: 0; border: 1px solid var(--line); border-radius: 999px;
+        background: rgb(12 13 16 / 78%); color: var(--text);
+        font-size: 1.5rem; line-height: 1;
       }
-      .photo-card .photo-actions button {
-        font-size: 0.72rem; padding: 0.35rem 0.5rem; width: 100%;
+      .photo-card .cover-star.is-cover {
+        border-color: var(--accent); background: var(--accent); color: #0c0d10;
       }
       .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
     </style>
@@ -314,42 +324,31 @@ export const prerender = false;
           img.alt = '';
           img.loading = 'lazy';
           card.append(img);
-          if (isCover) {
-            const badge = document.createElement('span');
-            badge.className = 'cover-badge';
-            badge.textContent = 'Copertina';
-            card.append(badge);
-          }
-          const actions = document.createElement('div');
-          actions.className = 'photo-actions';
-          const setBtn = document.createElement('button');
-          setBtn.type = 'button';
-          if (isCover) {
-            setBtn.className = 'ghost';
-            setBtn.textContent = 'Copertina attuale';
-            setBtn.disabled = true;
-          } else {
-            setBtn.textContent = 'Imposta come copertina';
-            setBtn.onclick = async () => {
-              setBtn.disabled = true;
-              try {
-                const data = await api(`/api/albums/${album.id}`, {
-                  method: 'PATCH',
-                  json: { coverPhotoId: photo.id },
-                });
-                const idx = state.albums.findIndex((a) => a.id === album.id);
-                if (idx >= 0) state.albums[idx] = data.album;
-                renderPhotoGrid(panel, data.album, data.photos || photos);
-                // Refresh album row badges without collapsing other panels
-                refreshAlbumBadges();
-              } catch (e) {
-                alert(e.message);
-                setBtn.disabled = false;
-              }
-            };
-          }
-          actions.append(setBtn);
-          card.append(actions);
+
+          const coverBtn = document.createElement('button');
+          coverBtn.type = 'button';
+          coverBtn.className = `cover-star${isCover ? ' is-cover' : ''}`;
+          coverBtn.textContent = isCover ? '★' : '☆';
+          coverBtn.setAttribute('aria-label', isCover ? 'Rimuovi copertina' : 'Imposta come copertina');
+          coverBtn.title = isCover ? 'Rimuovi copertina' : 'Imposta come copertina';
+          coverBtn.onclick = async () => {
+            coverBtn.disabled = true;
+            try {
+              const data = await api(`/api/albums/${album.id}`, {
+                method: 'PATCH',
+                json: { coverPhotoId: isCover ? null : photo.id },
+              });
+              const idx = state.albums.findIndex((a) => a.id === album.id);
+              if (idx >= 0) state.albums[idx] = data.album;
+              renderPhotoGrid(panel, data.album, data.photos || photos);
+              // Refresh album row badges without collapsing other panels
+              refreshAlbumBadges();
+            } catch (e) {
+              alert(e.message);
+              coverBtn.disabled = false;
+            }
+          };
+          card.append(coverBtn);
           grid.append(card);
         }
         panel.append(grid);
