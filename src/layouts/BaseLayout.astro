@@ -44,6 +44,7 @@ const jsonLd = {
       '@id': websiteId,
       name: SITE.name,
       url: SITE.url,
+      description: t(locale, 'home.bio'),
       inLanguage: ['it', 'en'],
       publisher: { '@id': personId },
     },
@@ -54,6 +55,7 @@ const jsonLd = {
       alternateName: 'TCDev',
       url: SITE.url,
       email: SITE.email,
+      description: t(locale, 'home.bio'),
       jobTitle: locale === 'it' ? 'Sviluppatore e fotografo' : 'Developer and photographer',
       address: {
         '@type': 'PostalAddress',
@@ -61,6 +63,14 @@ const jsonLd = {
         addressCountry: 'IT',
       },
       sameAs: [SITE.social.instagram, SITE.social.linkedin, SITE.social.github],
+      knowsAbout: [
+        'software development',
+        'photography',
+        'landscapes',
+        'portraits',
+        'events',
+        'Bergamo',
+      ],
     },
   ],
 };
@@ -95,6 +105,7 @@ const jsonLd = {
     <meta name="theme-color" content="#0c0d10" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+    <link rel="describedby" href="/llms.txt" type="text/plain" title="llms.txt" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

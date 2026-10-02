@@ -1,0 +1,38 @@
+# TCDev
+
+> Personal portfolio of Riccardo (online as TCDev): developer and photographer in Bergamo. Software projects plus photo galleries. Site is bilingual (Italian and English).
+
+Mi chiamo Riccardo, online mi trovi come TCDev. Sono uno sviluppatore e fotografo di Bergamo: progetto e scrivo software, e fotografo paesaggi e natura, ritratti e eventi.
+
+I'm Riccardo, online as TCDev. I'm a developer and photographer from Bergamo: I build software, and I shoot landscapes and nature, portraits, and events.
+
+Photo albums cover landscapes and nature, portraits and people, and events. Albums are managed from a private admin area (not for public crawl or citation).
+
+## Italian pages
+
+- [Home](https://tcdev.xyz/it): Overview
+- [Projects](https://tcdev.xyz/it/projects): Public software and coming-soon work
+- [Photos](https://tcdev.xyz/it/photos): Photo album index
+- [About](https://tcdev.xyz/it/about): Bio and camera gear
+- [Contact](https://tcdev.xyz/it/contact): Email and social links
+
+## English pages
+
+- [Home](https://tcdev.xyz/en): Overview
+- [Projects](https://tcdev.xyz/en/projects): Public software and coming-soon work
+- [Photos](https://tcdev.xyz/en/photos): Photo album index
+- [About](https://tcdev.xyz/en/about): Bio and camera gear
+- [Contact](https://tcdev.xyz/en/contact): Email and social links
+
+## Contact
+
+- [Instagram](https://instagram.com/TCDev): @TCDev
+- [LinkedIn](https://linkedin.com/in/tcdev0): linkedin.com/in/tcdev0
+- [GitHub](https://github.com/TCDev10): TCDev10
+- Email: email@tcdev.xyz
+- Site: https://tcdev.xyz
+
+## Optional
+
+- [llms-full.txt](https://tcdev.xyz/llms-full.txt): Longer summary with project list
+- [Sitemap](https://tcdev.xyz/sitemap-index.xml): XML sitemap for crawlers

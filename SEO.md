@@ -40,3 +40,20 @@ No rankings, traffic, or Search Console claims — repo/build evidence only.
 - Fetch `/robots.txt`, `/sitemap-index.xml`, and 2–3 canonical HTML pages; confirm status, canonical, hreflang set.
 - URL Inspection on `/it`, `/en`, `/it/projects`, `/it/photos`.
 - Confirm `/` → 302 → `/it` or `/en`, and trailing-slash URLs 301 to non-slash.
+
+## GEO (Generative Engine Optimization)
+
+Machine-readable summaries for AI crawlers and agents (llms.txt convention):
+
+| File | URL | Role |
+|------|-----|------|
+| `public/llms.txt` | https://tcdev.xyz/llms.txt | Concise site briefing: who, purpose, IT/EN key URLs, contact, photo topics |
+| `public/llms-full.txt` | https://tcdev.xyz/llms-full.txt | Longer briefing: project names (public + coming soon without private URLs), gear, admin note |
+
+Notes:
+
+- Bios match the locked IT/EN copy on the site (no surname, no em dashes).
+- `robots.txt` explicitly `Allow`s both files and comments their URLs; `/admin` and `/api/` stay disallowed.
+- HTML head links `rel="describedby"` to `/llms.txt` (llms.txt v2 discovery hint).
+- Person/WebSite JSON-LD `description` stays aligned with the same bio wording.
+- After deploy, fetch `/llms.txt` and `/llms-full.txt` (expect 200, `text/plain` or markdown-friendly body).
