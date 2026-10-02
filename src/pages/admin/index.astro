@@ -87,6 +87,33 @@ export const prerender = false;
       button:disabled { opacity: 0.55; cursor: not-allowed; }
       button[aria-busy="true"] { position: relative; }
       .empty { color: var(--mute); font-size: 0.9rem; padding: 0.5rem 0; }
+
+      .badge.cover { color: var(--accent); border-color: var(--accent); }
+      .album-block { border-top: 1px solid var(--line); padding: 0.85rem 0; }
+      .album-block:first-child { border-top: none; }
+      .photo-grid {
+        display: grid; gap: 0.75rem;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        margin-top: 0.75rem;
+      }
+      .photo-card {
+        position: relative; background: #1b1e27; border: 1px solid var(--line);
+        border-radius: 0.75rem; overflow: hidden;
+      }
+      .photo-card.is-cover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+      .photo-card img { display: block; width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+      .photo-card .cover-badge {
+        position: absolute; top: 0.4rem; left: 0.4rem;
+        font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em;
+        background: var(--accent); color: #0c0d10; font-weight: 700;
+        padding: 0.15rem 0.45rem; border-radius: 999px;
+      }
+      .photo-card .photo-actions {
+        display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0.45rem;
+      }
+      .photo-card .photo-actions button {
+        font-size: 0.72rem; padding: 0.35rem 0.5rem; width: 100%;
+      }
       .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
     </style>
   </head>
@@ -171,28 +198,43 @@ export const prerender = false;
         return data;
       }
 
+
       function renderAlbums() {
         const root = $('albums');
         const select = $('albumSelect');
         root.innerHTML = '';
         select.innerHTML = '';
         if (!state.albums.length) {
-          root.innerHTML = '<p class="empty">No albums yet. Create one above.</p>';
+          root.innerHTML = '<p class="empty">Nessun album. Creane uno sopra.</p>';
           return;
         }
         for (const album of state.albums) {
+          const block = document.createElement('div');
+          block.className = 'album-block';
+          block.dataset.albumId = album.id;
+
           const row = document.createElement('div');
           row.className = 'album';
+          row.style.borderTop = 'none';
+          row.style.padding = '0';
           row.innerHTML = `
             <div>
               <strong>${escapeHtml(album.name.en)}</strong>
               <span class="badge">${escapeHtml(album.slug)}</span>
               ${album.archived ? '<span class="badge">archived</span>' : ''}
+              ${album.coverPhotoId ? '<span class="badge cover">copertina</span>' : ''}
               <div class="muted">${escapeHtml(album.name.it)}</div>
             </div>
           `;
           const actions = document.createElement('div');
           actions.className = 'actions';
+
+          const photosBtn = document.createElement('button');
+          photosBtn.className = 'ghost';
+          photosBtn.type = 'button';
+          photosBtn.textContent = 'Foto';
+          photosBtn.onclick = () => toggleAlbumPhotos(album.id, block).catch((e) => alert(e.message));
+
           const rename = document.createElement('button');
           rename.className = 'ghost';
           rename.type = 'button';
@@ -204,6 +246,7 @@ export const prerender = false;
             await api(`/api/albums/${album.id}`, { method: 'PATCH', json: { nameEn, nameIt } });
             await loadAlbums();
           };
+
           const archive = document.createElement('button');
           archive.className = 'danger';
           archive.type = 'button';
@@ -215,15 +258,117 @@ export const prerender = false;
             });
             await loadAlbums();
           };
-          actions.append(rename, archive);
+
+          actions.append(photosBtn, rename, archive);
           row.append(actions);
-          root.append(row);
+          block.append(row);
+
+          const photosPanel = document.createElement('div');
+          photosPanel.className = 'photos-panel hidden';
+          photosPanel.dataset.panel = album.id;
+          block.append(photosPanel);
+
+          root.append(block);
 
           if (!album.archived) {
             const opt = document.createElement('option');
             opt.value = album.id;
             opt.textContent = `${album.name.en} (${album.slug})`;
             select.append(opt);
+          }
+        }
+      }
+
+      async function toggleAlbumPhotos(albumId, block) {
+        const panel = block.querySelector('.photos-panel');
+        if (!panel.classList.contains('hidden') && panel.dataset.loaded === '1') {
+          panel.classList.add('hidden');
+          return;
+        }
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<p class="muted">Caricamento foto…</p>';
+        const data = await api(`/api/albums/${albumId}`);
+        const album = data.album;
+        const photos = data.photos || [];
+        // Keep album list in sync (coverPhotoId may have changed)
+        const idx = state.albums.findIndex((a) => a.id === albumId);
+        if (idx >= 0) state.albums[idx] = album;
+        renderPhotoGrid(panel, album, photos);
+        panel.dataset.loaded = '1';
+      }
+
+      function renderPhotoGrid(panel, album, photos) {
+        panel.innerHTML = '';
+        if (!photos.length) {
+          panel.innerHTML = '<p class="empty">Nessuna foto in questo album.</p>';
+          return;
+        }
+        const grid = document.createElement('div');
+        grid.className = 'photo-grid';
+        for (const photo of photos) {
+          const isCover = album.coverPhotoId === photo.id;
+          const card = document.createElement('div');
+          card.className = 'photo-card' + (isCover ? ' is-cover' : '');
+          const img = document.createElement('img');
+          img.src = photo.url;
+          img.alt = '';
+          img.loading = 'lazy';
+          card.append(img);
+          if (isCover) {
+            const badge = document.createElement('span');
+            badge.className = 'cover-badge';
+            badge.textContent = 'Copertina';
+            card.append(badge);
+          }
+          const actions = document.createElement('div');
+          actions.className = 'photo-actions';
+          const setBtn = document.createElement('button');
+          setBtn.type = 'button';
+          if (isCover) {
+            setBtn.className = 'ghost';
+            setBtn.textContent = 'Copertina attuale';
+            setBtn.disabled = true;
+          } else {
+            setBtn.textContent = 'Imposta come copertina';
+            setBtn.onclick = async () => {
+              setBtn.disabled = true;
+              try {
+                const data = await api(`/api/albums/${album.id}`, {
+                  method: 'PATCH',
+                  json: { coverPhotoId: photo.id },
+                });
+                const idx = state.albums.findIndex((a) => a.id === album.id);
+                if (idx >= 0) state.albums[idx] = data.album;
+                renderPhotoGrid(panel, data.album, data.photos || photos);
+                // Refresh album row badges without collapsing other panels
+                refreshAlbumBadges();
+              } catch (e) {
+                alert(e.message);
+                setBtn.disabled = false;
+              }
+            };
+          }
+          actions.append(setBtn);
+          card.append(actions);
+          grid.append(card);
+        }
+        panel.append(grid);
+      }
+
+      function refreshAlbumBadges() {
+        for (const album of state.albums) {
+          const block = document.querySelector(`.album-block[data-album-id="${album.id}"]`);
+          if (!block) continue;
+          const title = block.querySelector('.album > div');
+          if (!title) continue;
+          let coverBadge = title.querySelector('.badge.cover');
+          if (album.coverPhotoId && !coverBadge) {
+            coverBadge = document.createElement('span');
+            coverBadge.className = 'badge cover';
+            coverBadge.textContent = 'copertina';
+            title.insertBefore(coverBadge, title.querySelector('.muted'));
+          } else if (!album.coverPhotoId && coverBadge) {
+            coverBadge.remove();
           }
         }
       }

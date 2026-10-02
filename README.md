@@ -42,9 +42,9 @@ Without an R2 binding the app uses **in-memory mock storage** seeded with:
 | `/{lang}/photos/[album]` | Album gallery from metadata |
 | `/{lang}/about` | Bio + gear |
 | `/{lang}/contact` | Email, IG, LinkedIn, GitHub |
-| `/admin` | Albums CRUD + drag-and-drop upload |
+| `/admin` | Albums CRUD, cover selection, drag-and-drop upload |
 | `/api/albums` | List / create albums |
-| `/api/albums/[id]` | Get / rename / archive |
+| `/api/albums/[id]` | Get (+ photos) / rename / archive / set cover |
 | `/api/upload` | Accept WebP (client-resized) into album |
 | `/api/auth` | Set admin cookie from token |
 | `/api/photos/[...key]` | Serve R2 object |
@@ -78,6 +78,14 @@ albums/{albumId}/{photoId}.webp
 
 Admin UI resizes (longest edge 2400px) and converts to **WebP in the browser**, then POSTs to `/api/upload`.  
 That keeps the Worker free of native `sharp` (not available on the edge runtime).
+
+### Album covers
+
+Each album may store an optional `coverPhotoId` in `albums.json`.  
+Admin → **Foto** on an album → **Imposta come copertina** on a photo.  
+Public album cards use that photo when present; otherwise the first photo in the album.  
+If the cover photo is deleted (or missing), pages fall back to the first photo without error.
+
 
 Optional later: a Node-compatible Worker/Pages Function with `sharp` for server-side processing, or Cloudflare Image Resizing on delivery.
 

@@ -7,6 +7,7 @@ import { isLocale, localizedPath } from '../../i18n';
 import { t } from '../../i18n/ui';
 import { publicProjects } from '../../data/projects';
 import { listAlbums, listPhotos } from '../../lib/storage';
+import { resolveCoverPhoto } from '../../lib/albums';
 import type { Locale } from '../../data/site';
 
 export const prerender = true;
@@ -28,7 +29,7 @@ const albumMeta = await Promise.all(
     return {
       album,
       count: photos.length,
-      coverUrl: photos[0]?.url,
+      coverUrl: resolveCoverPhoto(album, photos)?.url,
     };
   }),
 );

@@ -4,6 +4,8 @@ export type Album = {
   /** Labels per locale */
   name: { it: string; en: string };
   description: { it: string; en: string };
+  /** Optional cover photo id; public pages fall back to first photo if missing. */
+  coverPhotoId?: string;
   archived: boolean;
   createdAt: string;
   updatedAt: string;
@@ -67,4 +69,13 @@ export function slugify(input: string): string {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
     .slice(0, 64);
+}
+
+/** Cover photo if set and still present; otherwise first photo. */
+export function resolveCoverPhoto(album: Album, photos: Photo[]): Photo | undefined {
+  if (album.coverPhotoId) {
+    const cover = photos.find((p) => p.id === album.coverPhotoId);
+    if (cover) return cover;
+  }
+  return photos[0];
 }

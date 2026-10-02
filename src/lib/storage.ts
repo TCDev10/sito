@@ -98,6 +98,34 @@ export async function archiveAlbum(
   return saveAlbum(album, locals);
 }
 
+/**
+ * Set album cover to a photo that must belong to the album.
+ * Pass null/undefined photoId to clear the cover (fallback to first photo).
+ */
+export async function setAlbumCover(
+  albumId: string,
+  photoId: string | null | undefined,
+  locals?: App.Locals,
+): Promise<Album | undefined> {
+  const bucket = getBucket(locals);
+  const data = await readFile(bucket);
+  const album = data.albums.find((a) => a.id === albumId);
+  if (!album) return undefined;
+
+  if (photoId == null || photoId === '') {
+    delete album.coverPhotoId;
+  } else {
+    const photo = data.photos.find((p) => p.id === photoId && p.albumId === albumId);
+    if (!photo) {
+      throw new Error('Photo not found in album');
+    }
+    album.coverPhotoId = photoId;
+  }
+  album.updatedAt = new Date().toISOString();
+  await writeFile(bucket, data);
+  return album;
+}
+
 export async function listPhotos(
   albumId: string,
   locals?: App.Locals,
@@ -127,6 +155,36 @@ export async function addPhoto(
   data.photos.push(photo);
   await writeFile(bucket, data);
   return photo;
+}
+
+/**
+ * Remove a photo from metadata (and R2 object when bound).
+ * Clears album.coverPhotoId when the deleted photo was the cover.
+ */
+export async function deletePhoto(
+  photoId: string,
+  locals?: App.Locals,
+): Promise<boolean> {
+  const bucket = getBucket(locals);
+  const data = await readFile(bucket);
+  const idx = data.photos.findIndex((p) => p.id === photoId);
+  if (idx < 0) return false;
+  const [photo] = data.photos.splice(idx, 1);
+  for (const album of data.albums) {
+    if (album.id === photo.albumId && album.coverPhotoId === photoId) {
+      delete album.coverPhotoId;
+      album.updatedAt = new Date().toISOString();
+    }
+  }
+  if (bucket) {
+    try {
+      await bucket.delete(photo.key);
+    } catch {
+      // Metadata already updated; object cleanup best-effort
+    }
+  }
+  await writeFile(bucket, data);
+  return true;
 }
 
 export async function getPhotoObject(
