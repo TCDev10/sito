@@ -1,7 +1,6 @@
 ---
 import { SITE, type Locale } from '../data/site';
 import { t } from '../i18n/ui';
-import { localizedPath } from '../i18n';
 
 interface Props {
   locale: Locale;
@@ -21,7 +20,7 @@ const { locale } = Astro.props;
       <li><a class="hover:text-accent focus-visible:rounded-sm" href={SITE.social.linkedin} rel="noopener noreferrer">LinkedIn</a></li>
       <li><a class="hover:text-accent focus-visible:rounded-sm" href={SITE.social.github} rel="noopener noreferrer">GitHub</a></li>
       <li><a class="hover:text-accent focus-visible:rounded-sm" href={SITE.social.email}>{SITE.email}</a></li>
-      <li><a class="hover:text-accent focus-visible:rounded-sm" href={localizedPath(locale, '/admin')}>{t(locale, 'nav.admin')}</a></li>
+      <li><a class="hover:text-accent focus-visible:rounded-sm" href="/admin" rel="nofollow">{t(locale, 'nav.admin')}</a></li>
     </ul>
   </div>
 </footer>

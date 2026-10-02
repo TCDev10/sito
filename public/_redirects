@@ -1,2 +1,16 @@
-# Cloudflare Pages fallback redirects
+# Cloudflare Pages redirects
 /go/multitool  https://tools.tcdev.xyz/  301
+
+# Trailing-slash → never (align with trailingSlash: 'never' + canonicals)
+/it/           /it  301
+/en/           /en  301
+/it/projects/  /it/projects  301
+/en/projects/  /en/projects  301
+/it/photos/    /it/photos  301
+/en/photos/    /en/photos  301
+/it/photos/*/  /it/photos/:splat  301
+/en/photos/*/  /en/photos/:splat  301
+/it/about/     /it/about  301
+/en/about/     /en/about  301
+/it/contact/   /it/contact  301
+/en/contact/   /en/contact  301

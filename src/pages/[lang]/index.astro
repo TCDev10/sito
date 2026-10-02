@@ -16,7 +16,9 @@ export function getStaticPaths() {
 }
 
 const lang = Astro.params.lang!;
-if (!isLocale(lang)) return Astro.redirect('/it');
+if (!isLocale(lang)) {
+  return Astro.rewrite('/404');
+}
 const locale = lang as Locale;
 const featured = publicProjects().slice(0, 4);
 const albums = (await listAlbums()).slice(0, 3);

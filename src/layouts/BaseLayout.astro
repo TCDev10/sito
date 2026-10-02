@@ -12,6 +12,8 @@ interface Props {
   description: string;
   path?: string;
   ogType?: string;
+  /** Optional page-specific robots directive (e.g. noindex). */
+  robots?: string;
 }
 
 const {
@@ -20,6 +22,7 @@ const {
   description,
   path = '/',
   ogType = 'website',
+  robots,
 } = Astro.props;
 
 const canonicalPath = localizedPath(locale, path);
@@ -27,7 +30,40 @@ const canonical = new URL(canonicalPath, SITE.url).toString();
 const altLocale = otherLocale(locale);
 const altPath = localizedPath(altLocale, path);
 const altUrl = new URL(altPath, SITE.url).toString();
+const xDefaultUrl = new URL(localizedPath('it', path), SITE.url).toString();
 const ogImage = new URL('/logo.jpg', SITE.url).toString();
+
+const personId = `${SITE.url}/#person`;
+const websiteId = `${SITE.url}/#website`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': websiteId,
+      name: SITE.name,
+      url: SITE.url,
+      inLanguage: ['it', 'en'],
+      publisher: { '@id': personId },
+    },
+    {
+      '@type': 'Person',
+      '@id': personId,
+      name: 'Riccardo',
+      alternateName: 'TCDev',
+      url: SITE.url,
+      email: SITE.email,
+      jobTitle: locale === 'it' ? 'Sviluppatore e fotografo' : 'Developer and photographer',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Bergamo',
+        addressCountry: 'IT',
+      },
+      sameAs: [SITE.social.instagram, SITE.social.linkedin, SITE.social.github],
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -38,16 +74,18 @@ const ogImage = new URL('/logo.jpg', SITE.url).toString();
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {robots && <meta name="robots" content={robots} />}
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang={locale} href={canonical} />
     <link rel="alternate" hreflang={altLocale} href={altUrl} />
-    <link rel="alternate" hreflang="x-default" href={new URL(localizedPath('it', path), SITE.url).toString()} />
+    <link rel="alternate" hreflang="x-default" href={xDefaultUrl} />
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={`${SITE.name} logo`} />
     <meta property="og:locale" content={locale === 'it' ? 'it_IT' : 'en_US'} />
     <meta property="og:locale:alternate" content={locale === 'it' ? 'en_US' : 'it_IT'} />
     <meta name="twitter:card" content="summary" />
@@ -56,12 +94,14 @@ const ogImage = new URL('/logo.jpg', SITE.url).toString();
     <meta name="twitter:image" content={ogImage} />
     <meta name="theme-color" content="#0c0d10" />
     <link rel="icon" href="/favicon.ico" />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Sans:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
     <a

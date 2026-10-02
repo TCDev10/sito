@@ -10,7 +10,9 @@ import type { Locale } from '../../../data/site';
 export const prerender = false;
 
 const lang = Astro.params.lang!;
-if (!isLocale(lang)) return Astro.redirect('/it');
+if (!isLocale(lang)) {
+  return Astro.rewrite('/404');
+}
 const locale = lang as Locale;
 const albums = await listAlbums(Astro.locals);
 const albumMeta = await Promise.all(
