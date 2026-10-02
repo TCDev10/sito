@@ -27,6 +27,7 @@ const breadcrumbs = [
   { name: t(locale, 'photos.title'), path: '/photos' },
   { name: album.name[locale], path: `/photos/${album.slug}` },
 ];
+const robots = photos.length === 0 ? 'noindex, follow' : undefined;
 ---
 
 <BaseLayout
@@ -35,6 +36,7 @@ const breadcrumbs = [
   description={description}
   path={`/photos/${album.slug}`}
   breadcrumbs={breadcrumbs}
+  robots={robots}
 >
   <header class="page-header">
     <p class="eyebrow">{t(locale, 'nav.photo')}</p>

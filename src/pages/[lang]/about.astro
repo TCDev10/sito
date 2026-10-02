@@ -58,6 +58,22 @@ const breadcrumbs = [
     </section>
   </section>
 
+  <section class="panel mt-8 p-6" aria-labelledby="brand-heading">
+    <h2 id="brand-heading" class="font-display text-xl font-semibold">tcdev.xyz</h2>
+    <p class="prose-muted mt-3 text-sm sm:text-base">{t(locale, 'about.brand')}</p>
+    <div class="mt-4 flex flex-wrap gap-4 text-sm">
+      <a class="text-accent hover:underline" href={localizedPath(locale, '/projects')}>
+        {t(locale, 'about.cta.projects')}
+      </a>
+      <a class="text-accent hover:underline" href={localizedPath(locale, '/photos')}>
+        {t(locale, 'about.cta.photos')}
+      </a>
+      <a class="text-accent hover:underline" href={localizedPath(locale, '/contact')}>
+        {t(locale, 'about.cta.contact')}
+      </a>
+    </div>
+  </section>
+
   <section class="mt-12 grid gap-6 md:grid-cols-2">
     <section class="panel p-6" aria-labelledby="gear-heading">
       <h2 id="gear-heading" class="font-display text-xl font-semibold">{t(locale, 'about.gear')}</h2>

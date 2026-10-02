@@ -21,7 +21,7 @@ export const projects: Project[] = [
       it: 'Utility per lavorare con PDF in modo semplice e veloce.',
       en: 'A utility for working with PDFs quickly and simply.',
     },
-    repo: 'https://github.com/TCDev10',
+    repo: 'https://github.com/TCDev10/MicaPDF',
     tags: ['PDF', 'tools'],
   },
   {
@@ -33,6 +33,7 @@ export const projects: Project[] = [
       en: 'A collection of small tools for developers and creators.',
     },
     url: 'https://tools.tcdev.xyz',
+    repo: 'https://github.com/TCDev10/multitool',
     tags: ['web', 'tools'],
   },
   {
@@ -43,7 +44,7 @@ export const projects: Project[] = [
       it: 'Generazione assistita di presentazioni.',
       en: 'Assisted presentation generation.',
     },
-    repo: 'https://github.com/TCDev10',
+    repo: 'https://github.com/TCDev10/AutoPPT',
     tags: ['productivity'],
   },
   {
@@ -54,7 +55,7 @@ export const projects: Project[] = [
       it: 'Simulazione e sperimentazione intorno a sistemi urbani.',
       en: 'Simulation and experiments around urban systems.',
     },
-    repo: 'https://github.com/TCDev10',
+    repo: 'https://github.com/TCDev10/CitySimulator',
     tags: ['simulation'],
   },
   {
@@ -65,7 +66,7 @@ export const projects: Project[] = [
       it: 'Il classico solitario Pyramid, rivisitato.',
       en: 'Classic Pyramid solitaire, revisited.',
     },
-    repo: 'https://github.com/TCDev10',
+    repo: 'https://github.com/TCDev10/Pyramid-Solitaire',
     tags: ['game'],
   },
   {
@@ -76,7 +77,7 @@ export const projects: Project[] = [
       it: 'Progetto sperimentale con focus su interazione e stato.',
       en: 'Experimental project focused on interaction and state.',
     },
-    repo: 'https://github.com/TCDev10',
+    repo: 'https://github.com/TCDev10/STDatchi',
     tags: ['experiment'],
   },
   {
@@ -87,7 +88,7 @@ export const projects: Project[] = [
       it: 'Sincronizzazione e gestione del progresso di gioco.',
       en: 'Sync and manage game progress.',
     },
-    repo: 'https://github.com/TCDev10',
+    repo: 'https://github.com/TCDev10/GameSync',
     tags: ['games'],
   },
   {
@@ -98,7 +99,7 @@ export const projects: Project[] = [
       it: 'Tracker personale per abitudini e metriche.',
       en: 'Personal tracker for habits and metrics.',
     },
-    repo: 'https://github.com/TCDev10',
+    repo: 'https://github.com/TCDev10/AuraTracker',
     tags: ['tracking'],
   },
   {

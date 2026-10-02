@@ -3,17 +3,14 @@ import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
-import { SEED_ALBUMS } from './src/lib/albums.ts';
 
 const SITE_URL = 'https://tcdev.xyz';
 
-/** Locale-prefixed public routes that SSR (not discovered by the sitemap crawl). */
-const ssrPhotoPages = ['it', 'en'].flatMap((lang) => [
-  `${SITE_URL}/${lang}/photos`,
-  ...SEED_ALBUMS.filter((a) => !a.archived).map(
-    (a) => `${SITE_URL}/${lang}/photos/${a.slug}`,
-  ),
-]);
+/** Locale-prefixed public routes that SSR (not discovered by the sitemap crawl).
+ * Album detail pages are omitted until they have photos (thin/empty seed albums).
+ * Empty albums also send noindex from the page itself.
+ */
+const ssrPhotoPages = ['it', 'en'].map((lang) => `${SITE_URL}/${lang}/photos`);
 
 function stripTrailingSlash(url) {
   if (url.endsWith('/') && url !== `${SITE_URL}/`) {
@@ -69,6 +66,8 @@ export default defineConfig({
         if (path === '/') return false; // Accept-Language redirect only
         if (path.startsWith('/admin') || path.startsWith('/api')) return false;
         if (!/^\/(it|en)(\/|$)/.test(path)) return false;
+        // Empty seed albums stay out of the sitemap (thin content).
+        if (/^\/(it|en)\/photos\/.+/.test(path)) return false;
         return true;
       },
       customPages: ssrPhotoPages,

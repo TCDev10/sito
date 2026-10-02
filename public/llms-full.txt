@@ -40,22 +40,22 @@ Public albums (seed topics; more can be added from admin):
 - Portraits / people (Ritratti / persone) at /[lang]/photos/ritratti-persone
 - Events (Eventi) at /[lang]/photos/eventi
 
-Photos are stored on Cloudflare R2 and served via the site.
+Photos are stored on Cloudflare R2 and served via the site. Empty albums are noindex and omitted from the sitemap until they contain photos.
 
 ## Public software projects
 
-Listed on /projects (names only; see that page for blurbs and links when available):
+Listed on /projects with blurbs and links:
 
-- MicaPDF
-- multitool (https://tools.tcdev.xyz)
-- AutoPPT
-- CitySimulator
-- Pyramid-Solitaire
-- STDatchi
-- GameSync
-- AuraTracker
+- MicaPDF  -  https://github.com/TCDev10/MicaPDF
+- multitool  -  https://tools.tcdev.xyz (repo https://github.com/TCDev10/multitool)
+- AutoPPT  -  https://github.com/TCDev10/AutoPPT
+- CitySimulator  -  https://github.com/TCDev10/CitySimulator
+- Pyramid-Solitaire  -  https://github.com/TCDev10/Pyramid-Solitaire
+- STDatchi  -  https://github.com/TCDev10/STDatchi
+- GameSync  -  https://github.com/TCDev10/GameSync
+- AuraTracker  -  https://github.com/TCDev10/AuraTracker
 
-GitHub: https://github.com/TCDev10
+GitHub profile: https://github.com/TCDev10
 
 ## Coming soon (no private repo URLs)
 
@@ -78,6 +78,9 @@ These appear on the site with a coming-soon badge. Source repos stay private unt
 - Photos: landscapes and nature, portraits and people, events.
 - Not all projects are open source; some are coming soon without source links.
 - Contact: email@tcdev.xyz, Instagram @TCDev, LinkedIn linkedin.com/in/tcdev0, GitHub TCDev10.
+- Is TCDev the same as tcdev.de or tcdev.cz? No. This site is the portfolio of Riccardo (TCDev) in Bergamo, Italy. Domain tcdev.xyz, GitHub TCDev10.
+- Do you build company websites in Bergamo? This site is a personal portfolio for software and photography, not a PMI agency service list. For collaborations: email@tcdev.xyz.
+- Where can I see MicaPDF, multitool, and AutoPPT? On the Projects page (/it/projects or /en/projects) with links to tools and public repositories.
 
 ## Contact
 
