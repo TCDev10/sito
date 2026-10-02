@@ -9,7 +9,7 @@ export const prerender = false;
     <meta name="robots" content="noindex, nofollow" />
     <title>Admin | TCDev</title>
     <link rel="icon" href="/favicon.ico" />
-    <style>
+    <style is:global>
       :root {
         color-scheme: dark;
         --ink: #0c0d10;
@@ -22,9 +22,9 @@ export const prerender = false;
         --danger: #f07178;
       }
 
-      * { box-sizing: border-box; }
+      #admin-root, #admin-root * { box-sizing: border-box; }
 
-      body {
+      #admin-root {
         margin: 0;
         min-height: 100dvh;
         color: var(--text);
@@ -35,11 +35,12 @@ export const prerender = false;
         font-family: ui-sans-serif, system-ui, sans-serif;
       }
 
-      header, main { width: min(100% - 2.5rem, 72rem); margin: 0 auto; }
-      header { padding: 2.5rem 0 1rem; }
-      main { padding: 0 0 3rem; }
+      #admin-root header,
+      #admin-root main { width: min(100% - 2.5rem, 72rem); margin: 0 auto; }
+      #admin-root header { padding: 2.5rem 0 1rem; }
+      #admin-root main { padding: 0 0 3rem; }
 
-      .eyebrow {
+      #admin-root .eyebrow {
         margin: 0 0 0.7rem;
         color: var(--accent);
         font-size: 0.72rem;
@@ -48,7 +49,7 @@ export const prerender = false;
         text-transform: uppercase;
       }
 
-      h1 {
+      #admin-root h1 {
         margin: 0;
         color: var(--text);
         font-size: clamp(1.8rem, 4vw, 2.45rem);
@@ -56,18 +57,18 @@ export const prerender = false;
         line-height: 1.05;
       }
 
-      h2 {
+      #admin-root h2 {
         margin: 0 0 1rem;
         color: var(--text);
         font-size: 1.1rem;
         letter-spacing: -0.02em;
       }
 
-      .muted { color: var(--mute); font-size: 0.9rem; line-height: 1.5; }
-      header .muted { max-width: 42rem; margin: 0.8rem 0 0; }
-      #mode { margin-top: 0.55rem; }
+      #admin-root .muted { color: var(--mute); font-size: 0.9rem; line-height: 1.5; }
+      #admin-root header .muted { max-width: 42rem; margin: 0.8rem 0 0; }
+      #admin-root #mode { margin-top: 0.55rem; }
 
-      .card {
+      #admin-root .card {
         margin-top: 1rem;
         padding: 1.25rem;
         background: rgb(20 22 28 / 0.8);
@@ -79,7 +80,7 @@ export const prerender = false;
         max-width: 100%;
       }
 
-      label {
+      #admin-root label {
         display: block;
         margin: 0 0 0.45rem;
         color: var(--mute);
@@ -89,7 +90,9 @@ export const prerender = false;
         text-transform: uppercase;
       }
 
-      input, textarea, select {
+      #admin-root input,
+      #admin-root textarea,
+      #admin-root select {
         width: 100%;
         min-height: 2.75rem;
         padding: 0.7rem 0.9rem;
@@ -101,11 +104,15 @@ export const prerender = false;
         transition: border-color 0.15s ease, background-color 0.15s ease;
       }
 
-      input:hover, textarea:hover, select:hover,
-      input:focus, textarea:focus, select:focus { border-color: rgb(125 211 192 / 0.55); }
-      input::placeholder { color: rgb(139 147 167 / 0.7); }
+      #admin-root input:hover,
+      #admin-root textarea:hover,
+      #admin-root select:hover,
+      #admin-root input:focus,
+      #admin-root textarea:focus,
+      #admin-root select:focus { border-color: rgb(125 211 192 / 0.55); }
+      #admin-root input::placeholder { color: rgb(139 147 167 / 0.7); }
 
-      button {
+      #admin-root button {
         display: inline-flex;
         min-height: 2.85rem;
         width: auto;
@@ -126,20 +133,20 @@ export const prerender = false;
         transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
       }
 
-      button:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
-      button:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
-      button[aria-busy="true"] { position: relative; }
+      #admin-root button:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
+      #admin-root button:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+      #admin-root button[aria-busy="true"] { position: relative; }
 
       /* Primary solid accent — Foto / Chiudi / Crea (never washes out) */
-      button.btn-primary {
+      #admin-root button.btn-primary {
         color: #0a0b0e;
         background: var(--accent);
         border-color: var(--accent);
         box-shadow: 0 0 0 1px rgb(125 211 192 / 0.25), 0 8px 20px rgb(125 211 192 / 0.18);
       }
-      button.btn-primary:hover:not(:disabled),
-      button.btn-primary[aria-expanded="true"],
-      button.btn-primary[aria-expanded="true"]:hover:not(:disabled) {
+      #admin-root button.btn-primary:hover:not(:disabled),
+      #admin-root button.btn-primary[aria-expanded="true"],
+      #admin-root button.btn-primary[aria-expanded="true"]:hover:not(:disabled) {
         color: #0a0b0e;
         background: #93e0d0;
         border-color: #93e0d0;
@@ -148,13 +155,13 @@ export const prerender = false;
       }
 
       /* Clear outline — Rinomina / Aggiorna / Blocca (no muddy grey fill) */
-      button.btn-ghost {
+      #admin-root button.btn-ghost {
         color: var(--text);
         background: transparent;
         border-color: rgb(232 235 242 / 0.5);
         box-shadow: none;
       }
-      button.btn-ghost:hover:not(:disabled) {
+      #admin-root button.btn-ghost:hover:not(:disabled) {
         color: var(--text);
         background: rgb(232 235 242 / 0.08);
         border-color: rgb(232 235 242 / 0.75);
@@ -162,13 +169,13 @@ export const prerender = false;
       }
 
       /* Clear red/pink danger outline — Archivia */
-      button.btn-danger {
+      #admin-root button.btn-danger {
         color: #ff9aa1;
         background: transparent;
         border-color: rgb(240 113 120 / 0.9);
         box-shadow: none;
       }
-      button.btn-danger:hover:not(:disabled) {
+      #admin-root button.btn-danger:hover:not(:disabled) {
         color: #0a0b0e;
         background: var(--danger);
         border-color: var(--danger);
@@ -176,25 +183,25 @@ export const prerender = false;
       }
 
       /* Accent outline — Ripristina */
-      button.btn-restore {
+      #admin-root button.btn-restore {
         color: var(--accent);
         background: rgb(125 211 192 / 0.08);
         border-color: rgb(125 211 192 / 0.7);
         box-shadow: none;
       }
-      button.btn-restore:hover:not(:disabled) {
+      #admin-root button.btn-restore:hover:not(:disabled) {
         color: #0a0b0e;
         background: var(--accent);
         border-color: var(--accent);
         filter: none;
       }
 
-      .row { display: grid; gap: 0.85rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-      .row > button { justify-self: start; }
-      .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem; margin-top: 1rem; }
-      .actions button { flex: 0 0 auto; }
+      #admin-root .row { display: grid; gap: 0.85rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+      #admin-root .row > button { justify-self: start; }
+      #admin-root .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem; margin-top: 1rem; }
+      #admin-root .actions button { flex: 0 0 auto; }
 
-      .drop {
+      #admin-root .drop {
         margin-top: 0.85rem;
         padding: 2.25rem 1rem;
         color: var(--mute);
@@ -204,9 +211,10 @@ export const prerender = false;
         cursor: pointer;
         transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
       }
-      .drop:hover, .drop.drag { color: var(--accent); border-color: var(--accent); background: rgb(125 211 192 / 0.05); }
+      #admin-root .drop:hover,
+      #admin-root .drop.drag { color: var(--accent); border-color: var(--accent); background: rgb(125 211 192 / 0.05); }
 
-      .album {
+      #admin-root .album {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
@@ -214,45 +222,45 @@ export const prerender = false;
         padding: 0.85rem 0;
         border-top: 1px solid var(--line);
       }
-      .album:first-child { border-top: none; }
-      .album > div:first-child { min-width: 0; }
-      .album > div:first-child strong { display: inline-block; margin-right: 0.35rem; }
-      .album > .actions { margin-top: 0; flex-shrink: 0; justify-content: flex-end; }
-      .album-actions { gap: 0.55rem; }
-      .album-actions button {
+      #admin-root .album:first-child { border-top: none; }
+      #admin-root .album > div:first-child { min-width: 0; }
+      #admin-root .album > div:first-child strong { display: inline-block; margin-right: 0.35rem; }
+      #admin-root .album > .actions { margin-top: 0; flex-shrink: 0; justify-content: flex-end; }
+      #admin-root .album-actions { gap: 0.55rem; }
+      #admin-root .album-actions button {
         min-height: 2.85rem;
         padding: 0.7rem 1.2rem;
         border-radius: 999px;
         white-space: nowrap;
       }
       /* Reinforce album row variants over bare button {} */
-      .album-actions button.btn-primary,
-      .album-actions button.btn-primary[aria-expanded="true"] {
+      #admin-root .album-actions button.btn-primary,
+      #admin-root .album-actions button.btn-primary[aria-expanded="true"] {
         color: #0a0b0e;
         background: var(--accent);
         border-color: var(--accent);
         box-shadow: 0 0 0 1px rgb(125 211 192 / 0.25), 0 8px 20px rgb(125 211 192 / 0.18);
       }
-      .album-actions button.btn-ghost {
+      #admin-root .album-actions button.btn-ghost {
         color: var(--text);
         background: transparent;
         border-color: rgb(232 235 242 / 0.5);
         box-shadow: none;
       }
-      .album-actions button.btn-danger {
+      #admin-root .album-actions button.btn-danger {
         color: #ff9aa1;
         background: transparent;
         border-color: rgb(240 113 120 / 0.9);
         box-shadow: none;
       }
-      .album-actions button.btn-restore {
+      #admin-root .album-actions button.btn-restore {
         color: var(--accent);
         background: transparent;
         border-color: rgb(125 211 192 / 0.7);
         box-shadow: none;
       }
-      .album-block.is-archived { opacity: 0.72; }
-      .album-divider {
+      #admin-root .album-block.is-archived { opacity: 0.72; }
+      #admin-root .album-divider {
         margin: 1rem 0 0.25rem;
         padding-top: 1rem;
         color: var(--mute);
@@ -263,7 +271,7 @@ export const prerender = false;
         border-top: 1px solid var(--line);
       }
 
-      .badge {
+      #admin-root .badge {
         display: inline-flex;
         align-items: center;
         margin: 0.15rem 0.25rem 0.15rem 0;
@@ -277,23 +285,23 @@ export const prerender = false;
         border: 1px solid var(--line);
         border-radius: 999px;
       }
-      .badge.mock { color: #f0b27a; border-color: #5a4630; }
-      .badge.cover { color: var(--accent); border-color: var(--accent); }
-      .hidden { display: none; }
-      #status { min-height: 1.25rem; margin: 0.65rem 0 0; color: var(--mute); font-size: 0.85rem; }
-      :focus { outline: none; }
-      :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-      .empty { padding: 0.5rem 0; color: var(--mute); font-size: 0.9rem; }
-      .album-block {
+      #admin-root .badge.mock { color: #f0b27a; border-color: #5a4630; }
+      #admin-root .badge.cover { color: var(--accent); border-color: var(--accent); }
+      #admin-root .hidden { display: none; }
+      #admin-root #status { min-height: 1.25rem; margin: 0.65rem 0 0; color: var(--mute); font-size: 0.85rem; }
+      #admin-root :focus { outline: none; }
+      #admin-root :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+      #admin-root .empty { padding: 0.5rem 0; color: var(--mute); font-size: 0.9rem; }
+      #admin-root .album-block {
         padding: 0.85rem 0;
         border-top: 1px solid var(--line);
         min-width: 0;
         max-width: 100%;
         overflow: visible;
       }
-      .album-block:first-child { border-top: none; }
+      #admin-root .album-block:first-child { border-top: none; }
       /* Open album gallery — mirrors public /[lang]/photos/[album] */
-      .photos-panel {
+      #admin-root .photos-panel {
         max-width: 100%;
         margin-top: 1.25rem;
         padding: 0;
@@ -302,7 +310,7 @@ export const prerender = false;
         border-radius: 0;
         overflow: visible;
       }
-      .photos-panel.is-scrollable {
+      #admin-root .photos-panel.is-scrollable {
         max-height: min(78vh, 56rem);
         overflow-x: hidden;
         overflow-y: auto;
@@ -310,7 +318,7 @@ export const prerender = false;
       }
 
       /* Exact public masonry: columns-1 sm:2 lg:3 xl:4, gap-4 */
-      .photos-masonry {
+      #admin-root .photos-masonry {
         width: 100%;
         max-width: 100%;
         margin: 0;
@@ -320,16 +328,22 @@ export const prerender = false;
         column-gap: 1rem;
       }
       @media (min-width: 640px) {
-        .photos-masonry { columns: 2; }
+
+        #admin-root .photos-masonry { columns: 2; }
+      
       }
       @media (min-width: 1024px) {
-        .photos-masonry { columns: 3; }
+
+        #admin-root .photos-masonry { columns: 3; }
+      
       }
       @media (min-width: 1280px) {
-        .photos-masonry { columns: 4; }
+
+        #admin-root .photos-masonry { columns: 4; }
+      
       }
 
-      .photos-masonry > li {
+      #admin-root .photos-masonry > li {
         position: relative;
         display: block;
         width: 100%;
@@ -345,11 +359,11 @@ export const prerender = false;
         border: 1px solid var(--line);
         border-radius: 1rem; /* rounded-2xl */
       }
-      .photos-masonry > li.is-cover {
+      #admin-root .photos-masonry > li.is-cover {
         border-color: var(--accent);
         box-shadow: 0 0 0 1px var(--accent);
       }
-      .photos-masonry > li img {
+      #admin-root .photos-masonry > li img {
         display: block;
         width: 100%;
         max-width: 100%;
@@ -359,7 +373,7 @@ export const prerender = false;
       }
 
       /* Cover star: top-right, hover/focus only (always visible when cover) */
-      .photos-masonry .cover-star {
+      #admin-root .photos-masonry .cover-star {
         position: absolute;
         top: 0.625rem;
         right: 0.625rem;
@@ -381,32 +395,34 @@ export const prerender = false;
         box-shadow: none;
         transition: opacity 0.15s ease, color 0.15s ease, background-color 0.15s ease;
       }
-      .photos-masonry > li:hover .cover-star,
-      .photos-masonry > li:focus-within .cover-star,
-      .photos-masonry .cover-star.is-cover {
+      #admin-root .photos-masonry > li:hover .cover-star,
+      #admin-root .photos-masonry > li:focus-within .cover-star,
+      #admin-root .photos-masonry .cover-star.is-cover {
         opacity: 1;
         pointer-events: auto;
       }
-      .photos-masonry .cover-star:hover:not(:disabled) {
+      #admin-root .photos-masonry .cover-star:hover:not(:disabled) {
         color: var(--accent);
         background: rgb(12 13 16 / 90%);
         filter: none;
         transform: none;
       }
-      .photos-masonry .cover-star.is-cover {
+      #admin-root .photos-masonry .cover-star.is-cover {
         color: var(--ink);
         background: var(--accent);
         border-color: var(--accent);
       }
 
       @media (max-width: 640px) {
-        header { padding-top: 2rem; }
-        .card { padding: 1rem; }
-        .album { flex-direction: column; }
-        .album > .actions { width: 100%; justify-content: flex-start; }
+
+        #admin-root header { padding-top: 2rem; }
+        #admin-root .card { padding: 1rem; }
+        #admin-root .album { flex-direction: column; }
+        #admin-root .album > .actions { width: 100%; justify-content: flex-start; }
+      
       }
 
-      .ui-ver {
+      #admin-root .ui-ver {
         display: inline-block;
         margin-left: 0.45rem;
         color: var(--mute);
@@ -416,13 +432,13 @@ export const prerender = false;
         text-transform: uppercase;
         opacity: 0.85;
       }
-      .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+      #admin-root .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
     </style>
   </head>
-  <body>
+  <body id="admin-root">
     <header>
       <p class="eyebrow">Workspace privato</p>
-      <h1>Portfolio admin <span class="ui-ver">UI v4</span></h1>
+      <h1>Portfolio admin <span class="ui-ver">UI v5</span></h1>
       <p class="muted">Gestisci album, copertine e upload. Le immagini vengono ridimensionate e convertite in WebP nel browser.</p>
       <p id="mode" class="muted"></p>
     </header>
