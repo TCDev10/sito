@@ -1,0 +1,14 @@
+/* TEAM */
+Name: Riccardo "TCDev"
+Role: Developer & Photographer
+Contact: email@tcdev.xyz
+Site: https://tcdev.xyz
+Location: Bergamo, Italia
+
+/* SITE */
+Stack: Astro, TypeScript, CSS custom
+Hosting: Cloudflare Pages
+Media: Cloudflare R2
+Fonts: Fraunces (self-hosted)
+Languages: Italiano, English
+Last update: 2026/10/02

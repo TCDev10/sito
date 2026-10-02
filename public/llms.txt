@@ -1,0 +1,41 @@
+# TCDev
+
+> Riccardo "TCDev" è uno sviluppatore e fotografo di Bergamo, Italia.
+> Questo sito raccoglie i suoi progetti software (app, tool, esperimenti) e la sua fotografia (paesaggi, ritratti, eventi).
+> Sito bilingue: italiano (lingua predefinita) e inglese, con mirror completo sotto /en/.
+
+## Pagine principali (italiano)
+
+- [Home](https://tcdev.xyz/): presentazione di Riccardo, progetti in evidenza e ultime foto.
+- [Progetti](https://tcdev.xyz/progetti/): catalogo dei progetti software di TCDev, con stato, stack, codice sorgente e demo.
+- [Foto](https://tcdev.xyz/foto/): galleria fotografica con filtri per categoria (paesaggi, ritratti, eventi).
+- [Contatti](https://tcdev.xyz/contatti/): email e profili social per collaborazioni e servizi fotografici.
+
+## Main pages (English)
+
+- [Home](https://tcdev.xyz/en/): introduction to Riccardo, featured projects and latest photos.
+- [Projects](https://tcdev.xyz/en/progetti/): catalog of TCDev's software projects, with status, stack, source code and demos.
+- [Photos](https://tcdev.xyz/en/foto/): photo gallery filterable by category (landscapes, portraits, events).
+- [Contacts](https://tcdev.xyz/en/contatti/): email and social profiles for collaborations and photo services.
+
+## Progetti in evidenza
+
+- [Multitool](https://tools.tcdev.xyz/): hub di strumenti web gratuiti (timer, convertitori, generatori).
+- [GameSync](https://github.com/TCDev10): sincronizzazione dei salvataggi dei giochi tra dispositivi.
+- [AuraTracker](https://github.com/TCDev10): tracker di abitudini e statistiche personali.
+- [AutoPPT](https://github.com/TCDev10): generazione automatica di presentazioni.
+- [MiCaPDF](https://github.com/TCDev10): strumenti per lavorare con file PDF.
+- [Pyramid Solitaire](https://github.com/TCDev10): implementazione del solitario Piramide.
+
+## Contatti
+
+- Email: email@tcdev.xyz
+- GitHub: https://github.com/TCDev10
+- Instagram: https://instagram.com/tcdev
+- LinkedIn: https://linkedin.com/in/tcdev0
+
+## Note tecniche
+
+- Sitemap: https://tcdev.xyz/sitemap-index.xml
+- Lingue: it (default), en
+- I contenuti sono statici, generati con Astro.

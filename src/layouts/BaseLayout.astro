@@ -32,13 +32,42 @@ const fullTitle = title === 'TCDev' ? title : `${title} · TCDev`;
 
 const personSchema = {
   '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Riccardo (TCDev)',
-  url: siteUrl,
-  sameAs: [
-    'https://github.com/TCDev10',
-    'https://linkedin.com/in/tcdev0',
-    'https://instagram.com/tcdev',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': `${siteUrl}/#person`,
+      name: 'Riccardo (TCDev)',
+      alternateName: 'TCDev',
+      url: siteUrl,
+      email: 'mailto:email@tcdev.xyz',
+      address: { '@type': 'PostalAddress', addressLocality: 'Bergamo', addressCountry: 'IT' },
+      jobTitle: lang === 'it' ? 'Developer e fotografo' : 'Developer and photographer',
+      knowsLanguage: ['it', 'en'],
+      sameAs: [
+        'https://github.com/TCDev10',
+        'https://linkedin.com/in/tcdev0',
+        'https://instagram.com/tcdev',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}/#website`,
+      url: siteUrl,
+      name: 'TCDev',
+      description: description,
+      inLanguage: ['it', 'en'],
+      author: { '@id': `${siteUrl}/#person` },
+    },
+    {
+      '@type': 'WebPage',
+      '@id': `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: fullTitle,
+      description: description,
+      inLanguage: lang,
+      isPartOf: { '@id': `${siteUrl}/#website` },
+      about: { '@id': `${siteUrl}/#person` },
+    },
   ],
 };
 ---
@@ -53,6 +82,7 @@ const personSchema = {
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
+    {lang === 'it' && <link rel="alternate" hreflang="it" href={canonicalUrl} />}
     <link rel="alternate" hreflang={lang === 'it' ? 'en' : 'it'} href={alternateFullUrl} />
     <link rel="alternate" hreflang="x-default" href={new URL(alternateUrl(Astro.url, 'en'), siteUrl).href} />
     {noindex ? (
@@ -68,6 +98,7 @@ const personSchema = {
     <meta property="og:image" content={new URL(ogImage, siteUrl).href} />
     <meta property="og:site_name" content="TCDev" />
     <meta property="og:locale" content={lang === 'it' ? 'it_IT' : 'en_US'} />
+    <meta property="og:locale:alternate" content={lang === 'it' ? 'en_US' : 'it_IT'} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
@@ -76,6 +107,7 @@ const personSchema = {
 
     <link rel="icon" href="/favicon.ico" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="author" href="/humans.txt" />
 
     <link rel="preload" href="/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin />
 

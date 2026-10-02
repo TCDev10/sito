@@ -18,7 +18,16 @@ export default defineConfig({
       prefixDefaultLocale: false,
     },
   },
-  integrations: [mdx(), sitemap()],
+  integrations: [
+    mdx(),
+    sitemap({
+      i18n: {
+        defaultLocale: 'it',
+        locales: { it: 'it', en: 'en' },
+      },
+      filter: (page) => !page.includes('/404'),
+    }),
+  ],
   markdown: {
     remarkPlugins: [remarkGfm, remarkSmartypants],
     rehypePlugins: [

@@ -2,3 +2,7 @@ User-agent: *
 Allow: /
 
 Sitemap: https://tcdev.xyz/sitemap-index.xml
+
+# Additional resources
+# LLMs: https://tcdev.xyz/llms.txt
+# Humans: https://tcdev.xyz/humans.txt
