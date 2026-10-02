@@ -168,6 +168,24 @@ export const prerender = false;
       .album > div:first-child { min-width: 0; }
       .album > div:first-child strong { display: inline-block; margin-right: 0.35rem; }
       .album > .actions { margin-top: 0; flex-shrink: 0; justify-content: flex-end; }
+      .album-actions { gap: 0.6rem; }
+      .album-actions button {
+        min-height: 2.75rem;
+        padding: 0.65rem 1.1rem;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+      .album-block.is-archived { opacity: 0.72; }
+      .album-divider {
+        margin: 1rem 0 0.25rem;
+        padding-top: 1rem;
+        color: var(--mute);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border-top: 1px solid var(--line);
+      }
 
       .badge {
         display: inline-flex;
@@ -192,22 +210,27 @@ export const prerender = false;
       .empty { padding: 0.5rem 0; color: var(--mute); font-size: 0.9rem; }
       .album-block { padding: 0.85rem 0; border-top: 1px solid var(--line); }
       .album-block:first-child { border-top: none; }
-      .photos-panel { margin-top: 0.25rem; }
+      .photos-panel {
+        max-height: 50vh;
+        margin-top: 0.75rem;
+        padding: 0.85rem;
+        overflow-y: auto;
+        background: rgb(20 22 28 / 0.72);
+        border: 1px solid var(--line);
+        border-radius: 0.9rem;
+      }
 
       .photo-grid {
         display: grid;
-        grid-template-columns: repeat(1, minmax(0, 1fr));
-        gap: 1rem;
-        margin-top: 0.75rem;
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+        gap: 0.65rem;
+        margin-top: 0.15rem;
       }
-      @media (min-width: 640px) {
-        .photo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      @media (min-width: 700px) {
+        .photo-grid { grid-template-columns: repeat(3, minmax(120px, 1fr)); }
       }
-      @media (min-width: 1024px) {
-        .photo-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-      }
-      @media (min-width: 1280px) {
-        .photo-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      @media (min-width: 900px) {
+        .photo-grid { grid-template-columns: repeat(4, minmax(120px, 1fr)); }
       }
       @media (max-width: 640px) {
         header { padding-top: 2rem; }
@@ -225,7 +248,14 @@ export const prerender = false;
         border-radius: 1rem;
       }
       .photo-card.is-cover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-      .photo-card img { display: block; width: 100%; max-width: 100%; height: auto; object-fit: cover; }
+      .photo-card img {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+      }
       .photo-card .cover-star {
         position: absolute;
         top: 0.625rem;
@@ -339,9 +369,19 @@ export const prerender = false;
           root.innerHTML = '<p class="empty">Nessun album. Creane uno sopra.</p>';
           return;
         }
-        for (const album of state.albums) {
+        const albums = [...state.albums].sort((a, b) => Number(a.archived) - Number(b.archived));
+        let archivedDividerAdded = false;
+        for (const album of albums) {
+          if (album.archived && !archivedDividerAdded) {
+            const divider = document.createElement('div');
+            divider.className = 'album-divider';
+            divider.textContent = 'Archiviati';
+            root.append(divider);
+            archivedDividerAdded = true;
+          }
+
           const block = document.createElement('div');
-          block.className = 'album-block';
+          block.className = `album-block${album.archived ? ' is-archived' : ''}`;
           block.dataset.albumId = album.id;
 
           const row = document.createElement('div');
@@ -350,20 +390,21 @@ export const prerender = false;
           row.style.padding = '0';
           row.innerHTML = `
             <div>
-              <strong>${escapeHtml(album.name.en)}</strong>
+              <strong>${escapeHtml(album.name.it)}</strong>
               <span class="badge">${escapeHtml(album.slug)}</span>
               ${album.archived ? '<span class="badge">archiviato</span>' : ''}
               ${album.coverPhotoId ? '<span class="badge cover">copertina</span>' : ''}
-              <div class="muted">${escapeHtml(album.name.it)}</div>
+              <div class="muted">${escapeHtml(album.name.en)}</div>
             </div>
           `;
           const actions = document.createElement('div');
-          actions.className = 'actions';
+          actions.className = 'actions album-actions';
 
           const photosBtn = document.createElement('button');
           photosBtn.className = 'ghost';
           photosBtn.type = 'button';
           photosBtn.textContent = 'Foto';
+          photosBtn.setAttribute('aria-expanded', 'false');
           photosBtn.onclick = () => toggleAlbumPhotos(album.id, block).catch((e) => alert(e.message));
 
           const rename = document.createElement('button');
@@ -379,7 +420,7 @@ export const prerender = false;
           };
 
           const archive = document.createElement('button');
-          archive.className = 'danger';
+          archive.className = album.archived ? 'ghost' : 'danger';
           archive.type = 'button';
           archive.textContent = album.archived ? 'Ripristina' : 'Archivia';
           archive.onclick = async () => {
@@ -396,6 +437,7 @@ export const prerender = false;
 
           const photosPanel = document.createElement('div');
           photosPanel.className = 'photos-panel hidden';
+          photosPanel.id = `photos-${album.id}`;
           photosPanel.dataset.panel = album.id;
           block.append(photosPanel);
 
@@ -404,7 +446,7 @@ export const prerender = false;
           if (!album.archived) {
             const opt = document.createElement('option');
             opt.value = album.id;
-            opt.textContent = `${album.name.en} (${album.slug})`;
+            opt.textContent = `${album.name.it} / ${album.name.en} (${album.slug})`;
             select.append(opt);
           }
         }
@@ -412,11 +454,19 @@ export const prerender = false;
 
       async function toggleAlbumPhotos(albumId, block) {
         const panel = block.querySelector('.photos-panel');
-        if (!panel.classList.contains('hidden') && panel.dataset.loaded === '1') {
+        const photosBtn = block.querySelector('.album-actions button');
+        if (!panel.classList.contains('hidden')) {
           panel.classList.add('hidden');
+          photosBtn?.setAttribute('aria-expanded', 'false');
           return;
         }
+        for (const otherPanel of document.querySelectorAll('.photos-panel')) {
+          if (otherPanel === panel) continue;
+          otherPanel.classList.add('hidden');
+          otherPanel.closest('.album-block')?.querySelector('.album-actions button')?.setAttribute('aria-expanded', 'false');
+        }
         panel.classList.remove('hidden');
+        photosBtn?.setAttribute('aria-expanded', 'true');
         panel.innerHTML = '<p class="muted">Caricamento foto…</p>';
         const data = await api(`/api/albums/${albumId}`);
         const album = data.album;
