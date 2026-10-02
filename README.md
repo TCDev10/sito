@@ -51,11 +51,11 @@ Without an R2 binding the app uses **in-memory mock storage** seeded with:
 
 ## Admin auth
 
-1. Set `ADMIN_TOKEN` in Cloudflare Pages (Production + Preview) or `.env`.
+1. Set `ADMIN_TOKEN` in Cloudflare Pages (Production + Preview) or `.env`. **Required in production/preview** — without it, login and mutating `/api/*` routes fail closed (503/401). Local `astro dev` alone may run without a token for mock UI.
 2. Open `/admin`, paste the token, Unlock.
-3. API calls send `Authorization: Bearer <token>` or the `admin_token` cookie.
+3. API calls send `Authorization: Bearer <token>` or the HttpOnly `admin_token` cookie (`Secure` on HTTPS, `SameSite=Lax`).
 
-Never commit real tokens. `.env` is gitignored.
+Never commit real tokens. `.env` is gitignored. Admin is `noindex` and disallowed in `robots.txt`.
 
 ## Photos + R2
 

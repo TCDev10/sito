@@ -103,9 +103,6 @@ export const prerender = false;
           <input id="token" type="password" autocomplete="current-password" placeholder="ADMIN_TOKEN" />
           <button id="loginBtn" type="button">Unlock</button>
         </div>
-        <p class="muted" style="margin-top:0.75rem">
-          Token from env only. In local/dev without ADMIN_TOKEN, any value works (mock storage).
-        </p>
       </section>
 
       <section id="app" class="hidden">
@@ -249,7 +246,11 @@ export const prerender = false;
       }
 
       async function unlock() {
-        const token = $('token').value.trim() || state.token || 'dev';
+        const token = $('token').value.trim() || state.token;
+        if (!token) {
+          alert('Enter ADMIN_TOKEN');
+          return;
+        }
         await api('/api/auth', { method: 'POST', json: { token } });
         state.token = token;
         localStorage.setItem('admin_token', token);
@@ -341,9 +342,12 @@ export const prerender = false;
         }
       };
       $('refresh').onclick = () => loadAlbums().catch((e) => alert(e.message));
-      $('logout').onclick = () => {
+      $('logout').onclick = async () => {
         localStorage.removeItem('admin_token');
         state.token = '';
+        try {
+          await fetch('/api/auth', { method: 'DELETE', credentials: 'same-origin' });
+        } catch (_) {}
         location.reload();
       };
 

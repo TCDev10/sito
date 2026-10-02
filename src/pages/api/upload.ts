@@ -22,6 +22,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return Response.json({ error: 'albumId and file required' }, { status: 400 });
   }
 
+  const maxBytes = 12 * 1024 * 1024; // 12 MiB after client WebP resize
+  if (file.size > maxBytes) {
+    return Response.json({ error: 'File too large' }, { status: 413 });
+  }
+  const contentTypeHint = file.type || '';
+  if (contentTypeHint && !contentTypeHint.startsWith('image/')) {
+    return Response.json({ error: 'Only image uploads allowed' }, { status: 415 });
+  }
+
   const album = await getAlbumById(albumId, locals);
   if (!album) return Response.json({ error: 'Album not found' }, { status: 404 });
 

@@ -4,9 +4,10 @@ import { archiveAlbum, getAlbumById, saveAlbum } from '../../../lib/storage';
 
 export const prerender = false;
 
-export const GET: APIRoute = async ({ params, locals }) => {
+export const GET: APIRoute = async ({ params, request, locals }) => {
   const album = await getAlbumById(params.id!, locals);
   if (!album) return Response.json({ error: 'Not found' }, { status: 404 });
+  if (album.archived && !isAuthorized(request, locals)) return unauthorized();
   return Response.json({ album });
 };
 

@@ -38,3 +38,17 @@
   Cache-Control: public, max-age=3600
   Content-Type: application/json; charset=utf-8
   Access-Control-Allow-Origin: *
+
+/api/*
+  Cache-Control: no-store
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: no-referrer
+
+/admin
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow
+
+/admin/
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow
