@@ -17,7 +17,7 @@ const { album, locale, count = 0, coverUrl, headingLevel = 'h2' } = Astro.props;
 const href = localizedPath(locale, `/photos/${album.slug}`);
 const empty = count === 0;
 const HeadingTag = headingLevel;
-const coverAlt = empty ? '' : album.name[locale];
+const coverAlt = "Foto";
 ---
 
 <a class="card-interactive group block overflow-hidden" href={href}>
