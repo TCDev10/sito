@@ -1,112 +1,197 @@
-﻿---
+---
+import '@fontsource-variable/dm-sans/wght.css';
+import '@fontsource-variable/instrument-sans/wght.css';
 import '../styles/global.css';
-import NavBar from '../components/NavBar.astro';
+import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { SITE, type Locale } from '../data/site';
+import { localizedPath, otherLocale } from '../i18n';
+import { t } from '../i18n/ui';
+
+export type BreadcrumbItem = { name: string; path: string };
+export type FaqItem = { question: string; answer: string };
 
 interface Props {
+  locale: Locale;
   title: string;
-  description?: string;
-  ogImage?: string;
-  ogType?: 'website' | 'article';
-  canonical?: string;
-  noindex?: boolean;
+  description: string;
+  path?: string;
+  ogType?: string;
+  /** Optional page-specific robots directive (e.g. noindex). */
+  robots?: string;
+  breadcrumbs?: BreadcrumbItem[];
+  faq?: FaqItem[];
 }
 
 const {
+  locale,
   title,
-  description = 'Portfolio fotografico e sviluppo software di TCDev.',
-  ogImage = '/logo.jpg',
+  description,
+  path = '/',
   ogType = 'website',
-  canonical,
-  noindex = false,
+  robots,
+  breadcrumbs,
+  faq,
 } = Astro.props;
 
-const siteUrl = 'https://tcdev.xyz';
-const canonicalUrl = canonical ? canonical : new URL(Astro.url.pathname, siteUrl).href;
-const fullTitle = title === 'TCDev' ? title : `${title} - TCDev`;
+const canonicalPath = localizedPath(locale, path);
+const canonical = new URL(canonicalPath, SITE.url).toString();
+const altLocale = otherLocale(locale);
+const altPath = localizedPath(altLocale, path);
+const altUrl = new URL(altPath, SITE.url).toString();
+const xDefaultUrl = new URL(localizedPath('it', path), SITE.url).toString();
+const ogImage = new URL('/images/og-default.png', SITE.url).toString();
+const ogImageAlt = 'TCDev — developer and photographer in Bergamo';
 
-const websiteSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'TCDev',
-  url: siteUrl,
-  inLanguage: 'it-IT',
-};
+const personId = `${SITE.url}/#person`;
+const websiteId = `${SITE.url}/#website`;
 
-const personSchema = {
+const graph: Record<string, unknown>[] = [
+  {
+    '@type': 'WebSite',
+    '@id': websiteId,
+    name: SITE.name,
+    url: SITE.url,
+    description: t(locale, 'home.bio'),
+    inLanguage: ['it', 'en'],
+    publisher: { '@id': personId },
+    author: { '@id': personId },
+  },
+  {
+    '@type': 'Person',
+    '@id': personId,
+    name: 'Riccardo',
+    alternateName: ['TCDev', 'TCDev10'],
+    url: SITE.url,
+    email: SITE.email,
+    image: ogImage,
+    description: t(locale, 'home.bio'),
+    jobTitle: locale === 'it' ? 'Sviluppatore e fotografo' : 'Developer and photographer',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Bergamo',
+      addressRegion: 'Lombardia',
+      addressCountry: 'IT',
+    },
+    sameAs: [SITE.social.instagram, SITE.social.linkedin, SITE.social.github],
+    knowsAbout: [
+      'software development',
+      'web development',
+      'photography',
+      'landscape photography',
+      'portrait photography',
+      'event photography',
+      'nature photography',
+      'Bergamo',
+    ],
+  },
+];
+
+if (breadcrumbs && breadcrumbs.length > 0) {
+  graph.push({
+    '@type': 'BreadcrumbList',
+    '@id': `${canonical}#breadcrumb`,
+    itemListElement: breadcrumbs.map((crumb, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: crumb.name,
+      item: new URL(localizedPath(locale, crumb.path), SITE.url).toString(),
+    })),
+  });
+}
+
+if (faq && faq.length > 0) {
+  graph.push({
+    '@type': 'FAQPage',
+    '@id': `${canonical}#faq`,
+    mainEntity: faq.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  });
+}
+
+const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'TCDev',
-  url: siteUrl,
-  sameAs: [
-    'https://github.com/TCDev69',
-    'https://linkedin.com/in/tcdev0',
-    'https://instagram.com/tcdev',
-  ],
+  '@graph': graph,
 };
 ---
 
 <!doctype html>
-<html lang="it" class="dark">
+<html lang={locale}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
-
-    <title>{fullTitle}</title>
+    <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalUrl} />
-    {noindex ? (
-      <meta name="robots" content="noindex,nofollow" />
-    ) : (
-      <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
-    )}
-
+    <meta name="author" content="Riccardo (TCDev)" />
+    {robots && <meta name="robots" content={robots} />}
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={locale} href={canonical} />
+    <link rel="alternate" hreflang={altLocale} href={altUrl} />
+    <link rel="alternate" hreflang="x-default" href={xDefaultUrl} />
     <meta property="og:type" content={ogType} />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:title" content={fullTitle} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL(ogImage, siteUrl).href} />
-    <meta property="og:site_name" content="TCDev" />
-    <meta property="og:locale" content="it_IT" />
-
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={locale === 'it' ? 'it_IT' : 'en_US'} />
+    <meta property="og:locale:alternate" content={locale === 'it' ? 'en_US' : 'it_IT'} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={new URL(ogImage, siteUrl).href} />
-    <meta name="twitter:site" content="@tcdev" />
-
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+    <meta name="theme-color" content="#0c0d10" />
     <link rel="icon" href="/favicon.ico" />
-
-    <link rel="sitemap" href="/sitemap-index.xml" />
-
-    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)}></script>
-    <script type="application/ld+json" set:html={JSON.stringify(personSchema)}></script>
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+    <link rel="describedby" href="/llms.txt" type="text/plain" title="llms.txt" />
+    <link rel="ai-catalog" href="/.well-known/ai-catalog.json" type="application/json" title="AI Catalog" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
-    <a href="#main-content" class="skip-link">Vai al contenuto</a>
-    <NavBar />
-    <main id="main-content">
+    <a class="skip-link" href="#main">
+      {t(locale, 'a11y.skip')}
+    </a>
+    <Header locale={locale} path={path} />
+    <main id="main" class="container-page pb-28 pt-10 md:pb-20">
+      {
+        breadcrumbs && breadcrumbs.length > 1 && (
+          <nav class="mb-6 text-sm text-mute" aria-label={t(locale, 'nav.breadcrumb')}>
+            <ol class="flex flex-wrap items-center gap-1.5">
+              {breadcrumbs.map((crumb, index) => {
+                const href = localizedPath(locale, crumb.path);
+                const last = index === breadcrumbs.length - 1;
+                return (
+                  <li class="inline-flex items-center gap-1.5">
+                    {index > 0 && <span aria-hidden="true">/</span>}
+                    {last ? (
+                      <span aria-current="page" class="text-text">
+                        {crumb.name}
+                      </span>
+                    ) : (
+                      <a class="hover:text-accent hover:underline" href={href}>
+                        {crumb.name}
+                      </a>
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
+          </nav>
+        )
+      }
       <slot />
     </main>
-    <Footer />
+    <Footer locale={locale} />
   </body>
 </html>
-
-<style>
-  .skip-link {
-    position: absolute;
-    left: -9999px;
-    top: var(--space-4);
-    z-index: 1000;
-    background: var(--color-blue-500);
-    color: #fff;
-    padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius-md);
-    font-weight: 500;
-    text-decoration: none;
-  }
-  .skip-link:focus {
-    left: var(--space-4);
-  }
-</style>

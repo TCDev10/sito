@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import EmptyState from '../../../components/EmptyState.astro';
+import { isLocale, localizedPath } from '../../../i18n';
+import { t } from '../../../i18n/ui';
+import { getAlbumBySlug, listPhotos } from '../../../lib/storage';
+import type { Locale } from '../../../data/site';
+
+export const prerender = false;
+
+const lang = Astro.params.lang!;
+const albumSlug = Astro.params.album!;
+if (!isLocale(lang)) {
+  return Astro.rewrite('/404');
+}
+const locale = lang as Locale;
+
+const album = await getAlbumBySlug(albumSlug, Astro.locals);
+if (!album || album.archived) {
+  return Astro.rewrite('/404');
+}
+const photos = await listPhotos(album.id, Astro.locals);
+const title = `${album.name[locale]} | TCDev Bergamo`;
+const description = album.description[locale];
+const breadcrumbs = [
+  { name: t(locale, 'nav.home'), path: '/' },
+  { name: t(locale, 'photos.title'), path: '/photos' },
+  { name: album.name[locale], path: `/photos/${album.slug}` },
+];
+const robots = photos.length === 0 ? 'noindex, follow' : undefined;
+---
+
+<BaseLayout
+  locale={locale}
+  title={title}
+  description={description}
+  path={`/photos/${album.slug}`}
+  breadcrumbs={breadcrumbs}
+  robots={robots}
+>
+  <header class="page-header">
+    <p class="eyebrow">{t(locale, 'nav.photo')}</p>
+    <h1 class="mt-3 font-display text-4xl font-semibold tracking-tight">{album.name[locale]}</h1>
+    <p class="prose-muted mt-4">{album.description[locale]}</p>
+  </header>
+
+  {
+    photos.length === 0 ? (
+      <div class="mt-12">
+        <EmptyState
+          title={t(locale, 'photos.empty.title')}
+          body={t(locale, 'photos.empty.body')}
+          actionHref={localizedPath(locale, '/photos')}
+          actionLabel={t(locale, 'photos.back')}
+        />
+      </div>
+    ) : (
+      <ul class="mt-12 columns-1 gap-4 sm:columns-2 lg:columns-3 xl:columns-4">
+        {photos.map((photo, index) => (
+          <li class="mb-4 break-inside-avoid overflow-hidden rounded-2xl border border-line bg-panel">
+            <img
+              src={photo.url}
+              alt="Foto"
+              class="h-auto w-full object-cover"
+              loading={index < 2 ? 'eager' : 'lazy'}
+              decoding="async"
+              width={photo.width ?? 1200}
+              height={photo.height ?? 800}
+              sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  <p class="mt-10">
+    <a class="text-sm text-accent hover:underline" href={localizedPath(locale, '/photos')}>
+      ← {t(locale, 'photos.back')}
+    </a>
+    {' · '}
+    <a class="text-sm text-accent hover:underline" href={localizedPath(locale, '/projects')}>
+      {t(locale, 'photos.cross.cta')}
+    </a>
+  </p>
+</BaseLayout>

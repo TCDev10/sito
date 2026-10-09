@@ -1,6 +1,16 @@
-# Cloudflare Pages — Redirect config
-# (Astro gestisce i redirect principali via astro.config.mjs)
-# Questo file è un fallback esplicito per CF Pages headers.
-
+# Cloudflare Pages redirects
 /go/multitool  https://tools.tcdev.xyz/  301
-/go/api        https://api.tcdev.xyz/    301
+
+# Trailing-slash → never for prerendered HTML only (build.format:'file').
+# Do NOT put SSR paths here (/admin, /{lang}/photos): the CF adapter adds
+# redirect targets to _routes.json exclude, which would 404 the Worker.
+# SSR trailing slashes are stripped in src/middleware.ts.
+# With format:'directory', CF 308s /it → /it/ and these rules looped.
+/it/           /it  301
+/en/           /en  301
+/it/projects/  /it/projects  301
+/en/projects/  /en/projects  301
+/it/about/     /it/about  301
+/en/about/     /en/about  301
+/it/contact/   /it/contact  301
+/en/contact/   /en/contact  301

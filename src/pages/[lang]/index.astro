@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import AlbumCard from '../../components/AlbumCard.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import { isLocale, localizedPath } from '../../i18n';
+import { t } from '../../i18n/ui';
+import { publicProjects } from '../../data/projects';
+import { listAlbums, listPhotos } from '../../lib/storage';
+import { resolveCoverPhoto } from '../../lib/albums';
+import type { Locale } from '../../data/site';
+
+export const prerender = false;
+
+const lang = Astro.params.lang!;
+if (!isLocale(lang)) {
+  return Astro.rewrite('/404');
+}
+const locale = lang as Locale;
+const featured = publicProjects().slice(0, 4);
+const albums = (await listAlbums(Astro.locals)).slice(0, 3);
+const albumMeta = await Promise.all(
+  albums.map(async (album) => {
+    const photos = await listPhotos(album.id, Astro.locals);
+    return {
+      album,
+      count: photos.length,
+      coverUrl: resolveCoverPhoto(album, photos)?.url,
+    };
+  }),
+);
+---
+
+<BaseLayout
+  locale={locale}
+  title={t(locale, 'seo.home.title')}
+  description={t(locale, 'seo.home.desc')}
+  path="/"
+>
+  <section class="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+    <div>
+      <p class="eyebrow">{t(locale, 'home.eyebrow')}</p>
+      <h1 class="mt-4 max-w-2xl font-display text-4xl font-semibold tracking-tight sm:text-5xl">
+        {t(locale, 'home.title')}
+      </h1>
+      <p class="prose-muted mt-6 max-w-2xl text-base sm:text-lg">
+        {t(locale, 'home.bio')}
+      </p>
+      <p class="prose-muted mt-4 max-w-2xl text-sm sm:text-base">
+        {t(locale, 'home.bridge')}
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a class="btn-primary" href={localizedPath(locale, '/projects')}>{t(locale, 'home.cta.projects')}</a>
+        <a class="btn-ghost" href={localizedPath(locale, '/photos')}>{t(locale, 'home.cta.photos')}</a>
+        <a class="btn-ghost" href={localizedPath(locale, '/about')}>{t(locale, 'home.cta.about')}</a>
+      </div>
+    </div>
+
+    <aside class="panel overflow-hidden" aria-label={t(locale, 'home.eyebrow')}>
+      <div class="border-b border-line p-5">
+        <p class="text-xs font-semibold uppercase tracking-wider text-accent">{t(locale, 'nav.dev')}</p>
+        <p class="mt-2 text-sm text-mute">{t(locale, 'home.dev.blurb')}</p>
+        <a class="mt-3 inline-block text-sm text-accent hover:underline" href={localizedPath(locale, '/projects')}>
+          {t(locale, 'home.cta.projects')}
+        </a>
+      </div>
+      <div class="p-5">
+        <p class="text-xs font-semibold uppercase tracking-wider text-accent-2">{t(locale, 'nav.photo')}</p>
+        <p class="mt-2 text-sm text-mute">{t(locale, 'home.photo.blurb')}</p>
+        <a class="mt-3 inline-block text-sm text-accent hover:underline" href={localizedPath(locale, '/photos')}>
+          {t(locale, 'home.cta.photos')}
+        </a>
+      </div>
+    </aside>
+  </section>
+
+  <section class="section-gap">
+    <div class="mb-6 flex items-end justify-between gap-4">
+      <div>
+        <p class="eyebrow">{t(locale, 'home.section.dev')}</p>
+        <h2 class="mt-2 font-display text-2xl font-semibold">{t(locale, 'projects.title')}</h2>
+      </div>
+      <a class="text-sm text-accent hover:underline" href={localizedPath(locale, '/projects')}>
+        {t(locale, 'home.cta.projects')}
+      </a>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+      {featured.map((project) => <ProjectCard project={project} locale={locale} />)}
+    </div>
+  </section>
+
+  <section class="section-gap">
+    <div class="mb-6 flex items-end justify-between gap-4">
+      <div>
+        <p class="eyebrow">{t(locale, 'home.section.photo')}</p>
+        <h2 class="mt-2 font-display text-2xl font-semibold">{t(locale, 'photos.title')}</h2>
+      </div>
+      <a class="text-sm text-accent hover:underline" href={localizedPath(locale, '/photos')}>
+        {t(locale, 'home.cta.photos')}
+      </a>
+    </div>
+    {
+      albumMeta.length === 0 ? (
+        <EmptyState
+          title={t(locale, 'photos.empty.list.title')}
+          body={t(locale, 'photos.empty.list.body')}
+          actionHref={localizedPath(locale, '/projects')}
+          actionLabel={t(locale, 'home.cta.projects')}
+        />
+      ) : (
+        <div class="grid gap-4 sm:grid-cols-3">
+          {albumMeta.map(({ album, count, coverUrl }) => (
+            <AlbumCard album={album} locale={locale} count={count} coverUrl={coverUrl} headingLevel="h3" />
+          ))}
+        </div>
+      )
+    }
+  </section>
+</BaseLayout>

@@ -1,0 +1,869 @@
+---
+export const prerender = false;
+---
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Admin | TCDev</title>
+    <link rel="icon" href="/favicon.ico" />
+    <style is:global>
+      :root {
+        color-scheme: dark;
+        --ink: #0c0d10;
+        --panel: #14161c;
+        --panel-2: #1b1e27;
+        --line: #2a2f3a;
+        --text: #e8ebf2;
+        --mute: #8b93a7;
+        --accent: #7dd3c0;
+        --danger: #f07178;
+      }
+
+      #admin-root, #admin-root * { box-sizing: border-box; }
+
+      #admin-root {
+        margin: 0;
+        min-height: 100dvh;
+        color: var(--text);
+        background:
+          radial-gradient(900px 460px at 8% -10%, rgb(125 211 192 / 0.12), transparent 60%),
+          radial-gradient(700px 420px at 92% 0%, rgb(196 161 255 / 0.09), transparent 58%),
+          var(--ink);
+        font-family: ui-sans-serif, system-ui, sans-serif;
+      }
+
+      #admin-root header,
+      #admin-root main { width: min(100% - 2.5rem, 72rem); margin: 0 auto; }
+      #admin-root header { padding: 2.5rem 0 1rem; }
+      #admin-root main { padding: 0 0 3rem; }
+
+      #admin-root .eyebrow {
+        margin: 0 0 0.7rem;
+        color: var(--accent);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      #admin-root h1 {
+        margin: 0;
+        color: var(--text);
+        font-size: clamp(1.8rem, 4vw, 2.45rem);
+        letter-spacing: -0.04em;
+        line-height: 1.05;
+      }
+
+      #admin-root h2 {
+        margin: 0 0 1rem;
+        color: var(--text);
+        font-size: 1.1rem;
+        letter-spacing: -0.02em;
+      }
+
+      #admin-root .muted { color: var(--mute); font-size: 0.9rem; line-height: 1.5; }
+      #admin-root header .muted { max-width: 42rem; margin: 0.8rem 0 0; }
+      #admin-root #mode { margin-top: 0.55rem; }
+
+      #admin-root .card {
+        margin-top: 1rem;
+        padding: 1.25rem;
+        background: rgb(20 22 28 / 0.8);
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        box-shadow: 0 1rem 3rem rgb(0 0 0 / 0.12);
+        backdrop-filter: blur(0.5rem);
+        overflow: hidden;
+        max-width: 100%;
+      }
+
+      #admin-root label {
+        display: block;
+        margin: 0 0 0.45rem;
+        color: var(--mute);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      #admin-root input,
+      #admin-root textarea,
+      #admin-root select {
+        width: 100%;
+        min-height: 2.75rem;
+        padding: 0.7rem 0.9rem;
+        color: var(--text);
+        font: inherit;
+        background: var(--panel-2);
+        border: 1px solid var(--line);
+        border-radius: 0.75rem;
+        transition: border-color 0.15s ease, background-color 0.15s ease;
+      }
+
+      #admin-root input:hover,
+      #admin-root textarea:hover,
+      #admin-root select:hover,
+      #admin-root input:focus,
+      #admin-root textarea:focus,
+      #admin-root select:focus { border-color: rgb(125 211 192 / 0.55); }
+      #admin-root input::placeholder { color: rgb(139 147 167 / 0.7); }
+
+      #admin-root button {
+        display: inline-flex;
+        min-height: 2.85rem;
+        width: auto;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        padding: 0.7rem 1.35rem;
+        color: var(--ink);
+        font: inherit;
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        line-height: 1.2;
+        background: var(--accent);
+        border: 1.5px solid transparent;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
+      }
+
+      #admin-root button:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
+      #admin-root button:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+      #admin-root button[aria-busy="true"] { position: relative; }
+
+      /* Primary solid accent — Foto / Chiudi / Crea (never washes out) */
+      #admin-root button.btn-primary {
+        color: #0a0b0e;
+        background: var(--accent);
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px rgb(125 211 192 / 0.25), 0 8px 20px rgb(125 211 192 / 0.18);
+      }
+      #admin-root button.btn-primary:hover:not(:disabled),
+      #admin-root button.btn-primary[aria-expanded="true"],
+      #admin-root button.btn-primary[aria-expanded="true"]:hover:not(:disabled) {
+        color: #0a0b0e;
+        background: #93e0d0;
+        border-color: #93e0d0;
+        box-shadow: 0 0 0 1px rgb(125 211 192 / 0.25), 0 8px 20px rgb(125 211 192 / 0.18);
+        filter: none;
+      }
+
+      /* Clear outline — Rinomina / Aggiorna / Blocca (no muddy grey fill) */
+      #admin-root button.btn-ghost {
+        color: var(--text);
+        background: transparent;
+        border-color: rgb(232 235 242 / 0.5);
+        box-shadow: none;
+      }
+      #admin-root button.btn-ghost:hover:not(:disabled) {
+        color: var(--text);
+        background: rgb(232 235 242 / 0.08);
+        border-color: rgb(232 235 242 / 0.75);
+        filter: none;
+      }
+
+      /* Clear red/pink danger outline — Archivia */
+      #admin-root button.btn-danger {
+        color: #ff9aa1;
+        background: transparent;
+        border-color: rgb(240 113 120 / 0.9);
+        box-shadow: none;
+      }
+      #admin-root button.btn-danger:hover:not(:disabled) {
+        color: #0a0b0e;
+        background: var(--danger);
+        border-color: var(--danger);
+        filter: none;
+      }
+
+      /* Accent outline — Ripristina */
+      #admin-root button.btn-restore {
+        color: var(--accent);
+        background: rgb(125 211 192 / 0.08);
+        border-color: rgb(125 211 192 / 0.7);
+        box-shadow: none;
+      }
+      #admin-root button.btn-restore:hover:not(:disabled) {
+        color: #0a0b0e;
+        background: var(--accent);
+        border-color: var(--accent);
+        filter: none;
+      }
+
+      #admin-root .row { display: grid; gap: 0.85rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+      #admin-root .row > button { justify-self: start; }
+      #admin-root .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem; margin-top: 1rem; }
+      #admin-root .actions button { flex: 0 0 auto; }
+
+      #admin-root .drop {
+        margin-top: 0.85rem;
+        padding: 2.25rem 1rem;
+        color: var(--mute);
+        text-align: center;
+        border: 1.5px dashed var(--line);
+        border-radius: 1rem;
+        cursor: pointer;
+        transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+      }
+      #admin-root .drop:hover,
+      #admin-root .drop.drag { color: var(--accent); border-color: var(--accent); background: rgb(125 211 192 / 0.05); }
+
+      #admin-root .album {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.85rem 0;
+        border-top: 1px solid var(--line);
+      }
+      #admin-root .album:first-child { border-top: none; }
+      #admin-root .album > div:first-child { min-width: 0; }
+      #admin-root .album > div:first-child strong { display: inline-block; margin-right: 0.35rem; }
+      #admin-root .album > .actions { margin-top: 0; flex-shrink: 0; justify-content: flex-end; }
+      #admin-root .album-actions { gap: 0.55rem; }
+      #admin-root .album-actions button {
+        min-height: 2.85rem;
+        padding: 0.7rem 1.2rem;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+      /* Reinforce album row variants over bare button {} */
+      #admin-root .album-actions button.btn-primary,
+      #admin-root .album-actions button.btn-primary[aria-expanded="true"] {
+        color: #0a0b0e;
+        background: var(--accent);
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px rgb(125 211 192 / 0.25), 0 8px 20px rgb(125 211 192 / 0.18);
+      }
+      #admin-root .album-actions button.btn-ghost {
+        color: var(--text);
+        background: transparent;
+        border-color: rgb(232 235 242 / 0.5);
+        box-shadow: none;
+      }
+      #admin-root .album-actions button.btn-danger {
+        color: #ff9aa1;
+        background: transparent;
+        border-color: rgb(240 113 120 / 0.9);
+        box-shadow: none;
+      }
+      #admin-root .album-actions button.btn-restore {
+        color: var(--accent);
+        background: transparent;
+        border-color: rgb(125 211 192 / 0.7);
+        box-shadow: none;
+      }
+      #admin-root .album-block.is-archived { opacity: 0.72; }
+      #admin-root .album-divider {
+        margin: 1rem 0 0.25rem;
+        padding-top: 1rem;
+        color: var(--mute);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        border-top: 1px solid var(--line);
+      }
+
+      #admin-root .badge {
+        display: inline-flex;
+        align-items: center;
+        margin: 0.15rem 0.25rem 0.15rem 0;
+        padding: 0.2rem 0.55rem;
+        color: var(--mute);
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        background: var(--panel-2);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+      }
+      #admin-root .badge.mock { color: #f0b27a; border-color: #5a4630; }
+      #admin-root .badge.cover { color: var(--accent); border-color: var(--accent); }
+      #admin-root .hidden { display: none; }
+      #admin-root #status { min-height: 1.25rem; margin: 0.65rem 0 0; color: var(--mute); font-size: 0.85rem; }
+      #admin-root :focus { outline: none; }
+      #admin-root :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+      #admin-root .empty { padding: 0.5rem 0; color: var(--mute); font-size: 0.9rem; }
+      #admin-root .album-block {
+        padding: 0.85rem 0;
+        border-top: 1px solid var(--line);
+        min-width: 0;
+        max-width: 100%;
+        overflow: visible;
+      }
+      #admin-root .album-block:first-child { border-top: none; }
+      /* Open album gallery — mirrors public /[lang]/photos/[album] */
+      #admin-root .photos-panel {
+        max-width: 100%;
+        margin-top: 1.25rem;
+        padding: 0;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        overflow: visible;
+      }
+      #admin-root .photos-panel.is-scrollable {
+        max-height: min(78vh, 56rem);
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding-right: 0.15rem;
+      }
+
+      /* Exact public masonry: columns-1 sm:2 lg:3 xl:4, gap-4 */
+      #admin-root .photos-masonry {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        columns: 1;
+        column-gap: 1rem;
+      }
+      @media (min-width: 640px) {
+
+        #admin-root .photos-masonry { columns: 2; }
+      
+      }
+      @media (min-width: 1024px) {
+
+        #admin-root .photos-masonry { columns: 3; }
+      
+      }
+      @media (min-width: 1280px) {
+
+        #admin-root .photos-masonry { columns: 4; }
+      
+      }
+
+      #admin-root .photos-masonry > li {
+        position: relative;
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        margin: 0 0 1rem;
+        padding: 0;
+        break-inside: avoid;
+        -webkit-column-break-inside: avoid;
+        page-break-inside: avoid;
+        overflow: hidden;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 1rem; /* rounded-2xl */
+      }
+      #admin-root .photos-masonry > li.is-cover {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px var(--accent);
+      }
+      #admin-root .photos-masonry > li img {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        object-fit: cover;
+        vertical-align: top;
+      }
+
+      /* Cover star: top-right, hover/focus only (always visible when cover) */
+      #admin-root .photos-masonry .cover-star {
+        position: absolute;
+        top: 0.625rem;
+        right: 0.625rem;
+        z-index: 1;
+        display: grid;
+        place-items: center;
+        width: 2.5rem;
+        min-height: 2.5rem;
+        height: 2.5rem;
+        padding: 0;
+        color: var(--text);
+        font-size: 1.35rem;
+        line-height: 1;
+        background: rgb(12 13 16 / 78%);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        opacity: 0;
+        pointer-events: none;
+        box-shadow: none;
+        transition: opacity 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+      }
+      #admin-root .photos-masonry > li:hover .cover-star,
+      #admin-root .photos-masonry > li:focus-within .cover-star,
+      #admin-root .photos-masonry .cover-star.is-cover {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #admin-root .photos-masonry .cover-star:hover:not(:disabled) {
+        color: var(--accent);
+        background: rgb(12 13 16 / 90%);
+        filter: none;
+        transform: none;
+      }
+      #admin-root .photos-masonry .cover-star.is-cover {
+        color: var(--ink);
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+
+      @media (max-width: 640px) {
+
+        #admin-root header { padding-top: 2rem; }
+        #admin-root .card { padding: 1rem; }
+        #admin-root .album { flex-direction: column; }
+        #admin-root .album > .actions { width: 100%; justify-content: flex-start; }
+      
+      }
+
+      #admin-root .ui-ver {
+        display: inline-block;
+        margin-left: 0.45rem;
+        color: var(--mute);
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.85;
+      }
+      #admin-root .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    </style>
+  </head>
+  <body id="admin-root">
+    <header>
+      <p class="eyebrow">Workspace privato</p>
+      <h1>Portfolio admin <span class="ui-ver">UI v5</span></h1>
+      <p class="muted">Gestisci album, copertine e upload. Le immagini vengono ridimensionate e convertite in WebP nel browser.</p>
+      <p id="mode" class="muted"></p>
+    </header>
+    <main>
+      <section id="login" class="card">
+        <label for="token">Token admin</label>
+        <div class="row">
+          <input id="token" type="password" autocomplete="current-password" placeholder="ADMIN_TOKEN" />
+          <button id="loginBtn" class="btn-primary" type="button">Sblocca</button>
+        </div>
+      </section>
+
+      <section id="app" class="hidden">
+        <div class="card">
+          <h2>Nuovo album</h2>
+          <div class="row">
+            <div>
+              <label for="nameIt">Nome IT</label>
+              <input id="nameIt" placeholder="Paesaggi / natura" />
+            </div>
+            <div>
+              <label for="nameEn">Nome EN</label>
+              <input id="nameEn" placeholder="Landscapes / nature" />
+            </div>
+          </div>
+          <div class="row" style="margin-top:0.75rem">
+            <div>
+              <label for="descIt">Descrizione IT</label>
+              <input id="descIt" />
+            </div>
+            <div>
+              <label for="descEn">Descrizione EN</label>
+              <input id="descEn" />
+            </div>
+          </div>
+          <div class="actions">
+            <button id="createAlbum" class="btn-primary" type="button">Crea</button>
+            <button id="refresh" class="btn-ghost" type="button">Aggiorna</button>
+            <button id="logout" class="btn-ghost" type="button">Blocca</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Album</h2>
+          <div id="albums"></div>
+        </div>
+
+        <div class="card">
+          <h2>Caricamento foto</h2>
+          <label for="albumSelect">Album di destinazione</label>
+          <select id="albumSelect"></select>
+          <div id="drop" class="drop" role="button" tabindex="0" aria-controls="fileInput">Trascina qui le immagini o clicca per scegliere</div>
+          <input id="fileInput" type="file" accept="image/*" multiple hidden />
+          <p id="status" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+    </main>
+
+    <script is:inline>
+      const state = { token: localStorage.getItem('admin_token') || '', albums: [] };
+
+      const $ = (id) => document.getElementById(id);
+      const status = (msg) => { $('status').textContent = msg || ''; };
+
+      async function api(path, options = {}) {
+        const headers = new Headers(options.headers || {});
+        if (state.token) headers.set('Authorization', `Bearer ${state.token}`);
+        if (options.json) {
+          headers.set('Content-Type', 'application/json');
+          options.body = JSON.stringify(options.json);
+          delete options.json;
+        }
+        const res = await fetch(path, { ...options, headers, credentials: 'same-origin' });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || res.statusText);
+        return data;
+      }
+
+
+      function renderAlbums() {
+        const root = $('albums');
+        const select = $('albumSelect');
+        root.innerHTML = '';
+        select.innerHTML = '';
+        if (!state.albums.length) {
+          root.innerHTML = '<p class="empty">Nessun album. Creane uno sopra.</p>';
+          return;
+        }
+        const albums = [...state.albums].sort((a, b) => Number(a.archived) - Number(b.archived));
+        let archivedDividerAdded = false;
+        for (const album of albums) {
+          if (album.archived && !archivedDividerAdded) {
+            const divider = document.createElement('div');
+            divider.className = 'album-divider';
+            divider.textContent = 'Archiviati';
+            root.append(divider);
+            archivedDividerAdded = true;
+          }
+
+          const block = document.createElement('div');
+          block.className = `album-block${album.archived ? ' is-archived' : ''}`;
+          block.dataset.albumId = album.id;
+
+          const row = document.createElement('div');
+          row.className = 'album';
+          row.style.borderTop = 'none';
+          row.style.padding = '0';
+          row.innerHTML = `
+            <div>
+              <strong>${escapeHtml(album.name.it)}</strong>
+              <span class="badge">${escapeHtml(album.slug)}</span>
+              ${album.archived ? '<span class="badge">archiviato</span>' : ''}
+              ${album.coverPhotoId ? '<span class="badge cover">copertina</span>' : ''}
+              <div class="muted">${escapeHtml(album.name.en)}</div>
+            </div>
+          `;
+          const actions = document.createElement('div');
+          actions.className = 'actions album-actions';
+
+          const photosBtn = document.createElement('button');
+          photosBtn.className = 'btn-primary photos-toggle';
+          photosBtn.type = 'button';
+          photosBtn.textContent = 'Foto';
+          photosBtn.setAttribute('aria-expanded', 'false');
+          photosBtn.onclick = () => toggleAlbumPhotos(album.id, block).catch((e) => alert(e.message));
+
+          const rename = document.createElement('button');
+          rename.className = 'btn-ghost';
+          rename.type = 'button';
+          rename.textContent = 'Rinomina';
+          rename.onclick = async () => {
+            const nameEn = prompt('Name EN', album.name.en);
+            const nameIt = prompt('Name IT', album.name.it);
+            if (!nameEn || !nameIt) return;
+            await api(`/api/albums/${album.id}`, { method: 'PATCH', json: { nameEn, nameIt } });
+            await loadAlbums();
+          };
+
+          const archive = document.createElement('button');
+          archive.className = album.archived ? 'btn-restore' : 'btn-danger';
+          archive.type = 'button';
+          archive.textContent = album.archived ? 'Ripristina' : 'Archivia';
+          archive.onclick = async () => {
+            await api(`/api/albums/${album.id}`, {
+              method: 'PATCH',
+              json: { archived: !album.archived },
+            });
+            await loadAlbums();
+          };
+
+          actions.append(photosBtn, rename, archive);
+          row.append(actions);
+          block.append(row);
+
+          const photosPanel = document.createElement('div');
+          photosPanel.className = 'photos-panel hidden';
+          photosPanel.id = `photos-${album.id}`;
+          photosPanel.dataset.panel = album.id;
+          block.append(photosPanel);
+
+          root.append(block);
+
+          if (!album.archived) {
+            const opt = document.createElement('option');
+            opt.value = album.id;
+            opt.textContent = `${album.name.it} / ${album.name.en} (${album.slug})`;
+            select.append(opt);
+          }
+        }
+      }
+
+      async function toggleAlbumPhotos(albumId, block) {
+        const panel = block.querySelector('.photos-panel');
+        const photosBtn = block.querySelector('.photos-toggle');
+        if (!panel.classList.contains('hidden')) {
+          panel.classList.add('hidden');
+          if (photosBtn) {
+            photosBtn.setAttribute('aria-expanded', 'false');
+            photosBtn.textContent = 'Foto';
+          }
+          return;
+        }
+        for (const otherPanel of document.querySelectorAll('.photos-panel')) {
+          if (otherPanel === panel) continue;
+          otherPanel.classList.add('hidden');
+          const otherBtn = otherPanel.closest('.album-block')?.querySelector('.photos-toggle');
+          if (otherBtn) {
+            otherBtn.setAttribute('aria-expanded', 'false');
+            otherBtn.textContent = 'Foto';
+          }
+        }
+        panel.classList.remove('hidden');
+        if (photosBtn) {
+          photosBtn.setAttribute('aria-expanded', 'true');
+          photosBtn.textContent = 'Chiudi';
+        }
+        panel.innerHTML = '<p class="muted">Caricamento foto…</p>';
+        const data = await api(`/api/albums/${albumId}`);
+        const album = data.album;
+        const photos = data.photos || [];
+        // Keep album list in sync (coverPhotoId may have changed)
+        const idx = state.albums.findIndex((a) => a.id === albumId);
+        if (idx >= 0) state.albums[idx] = album;
+        renderPhotoGrid(panel, album, photos);
+        panel.dataset.loaded = '1';
+      }
+
+      function renderPhotoGrid(panel, album, photos) {
+        panel.innerHTML = '';
+        panel.classList.remove('is-scrollable');
+        if (!photos.length) {
+          panel.innerHTML = '<p class="empty">Nessuna foto in questo album.</p>';
+          return;
+        }
+        if (photos.length > 8) panel.classList.add('is-scrollable');
+
+        const grid = document.createElement('ul');
+        grid.className = 'photos-masonry';
+        for (const photo of photos) {
+          const isCover = album.coverPhotoId === photo.id;
+          const card = document.createElement('li');
+          card.className = isCover ? 'is-cover' : '';
+
+          const img = document.createElement('img');
+          img.src = photo.url;
+          img.alt = 'Foto';
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          if (photo.width) img.width = photo.width;
+          if (photo.height) img.height = photo.height;
+          card.append(img);
+
+          const coverBtn = document.createElement('button');
+          coverBtn.type = 'button';
+          coverBtn.className = `cover-star${isCover ? ' is-cover' : ''}`;
+          coverBtn.textContent = isCover ? '★' : '☆';
+          coverBtn.setAttribute('aria-label', isCover ? 'Rimuovi copertina' : 'Imposta come copertina');
+          coverBtn.title = isCover ? 'Rimuovi copertina' : 'Imposta come copertina';
+          coverBtn.onclick = async () => {
+            coverBtn.disabled = true;
+            try {
+              const data = await api(`/api/albums/${album.id}`, {
+                method: 'PATCH',
+                json: { coverPhotoId: isCover ? null : photo.id },
+              });
+              const idx = state.albums.findIndex((a) => a.id === album.id);
+              if (idx >= 0) state.albums[idx] = data.album;
+              renderPhotoGrid(panel, data.album, data.photos || photos);
+              refreshAlbumBadges();
+            } catch (e) {
+              alert(e.message);
+              coverBtn.disabled = false;
+            }
+          };
+          card.append(coverBtn);
+          grid.append(card);
+        }
+        panel.append(grid);
+      }
+
+      function refreshAlbumBadges() {
+        for (const album of state.albums) {
+          const block = document.querySelector(`.album-block[data-album-id="${album.id}"]`);
+          if (!block) continue;
+          const title = block.querySelector('.album > div');
+          if (!title) continue;
+          let coverBadge = title.querySelector('.badge.cover');
+          if (album.coverPhotoId && !coverBadge) {
+            coverBadge = document.createElement('span');
+            coverBadge.className = 'badge cover';
+            coverBadge.textContent = 'copertina';
+            title.insertBefore(coverBadge, title.querySelector('.muted'));
+          } else if (!album.coverPhotoId && coverBadge) {
+            coverBadge.remove();
+          }
+        }
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;');
+      }
+
+      async function loadAlbums() {
+        const data = await api('/api/albums?all=1');
+        state.albums = data.albums || [];
+        $('mode').innerHTML = data.mock
+          ? '<span class="badge mock">mock storage</span> R2 unbound; in-memory seed albums.'
+          : '<span class="badge">R2</span> PHOTOS_BUCKET connected.';
+        renderAlbums();
+      }
+
+      async function unlock() {
+        const token = $('token').value.trim() || state.token;
+        if (!token) {
+          alert('Enter ADMIN_TOKEN');
+          return;
+        }
+        await api('/api/auth', { method: 'POST', json: { token } });
+        state.token = token;
+        localStorage.setItem('admin_token', token);
+        $('login').classList.add('hidden');
+        $('app').classList.remove('hidden');
+        await loadAlbums();
+      }
+
+      /** Resize longest edge to maxDim and encode WebP in the browser. */
+      async function toWebp(file, maxDim = 2400, quality = 0.82) {
+        const bitmap = await createImageBitmap(file);
+        const scale = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height));
+        const width = Math.round(bitmap.width * scale);
+        const height = Math.round(bitmap.height * scale);
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(bitmap, 0, 0, width, height);
+        bitmap.close();
+        const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/webp', quality));
+        if (!blob) throw new Error('WebP encode failed');
+        return { blob, width, height };
+      }
+
+      function setUploading(busy) {
+        drop.setAttribute('aria-busy', busy ? 'true' : 'false');
+        fileInput.disabled = busy;
+        $('createAlbum').disabled = busy;
+      }
+
+      async function uploadFiles(fileList) {
+        const albumId = $('albumSelect').value;
+        if (!albumId) {
+          status('Seleziona prima un album.');
+          return;
+        }
+        const files = [...fileList].filter((f) => f.type.startsWith('image/'));
+        if (!files.length) {
+          status('Nessuna immagine selezionata.');
+          return;
+        }
+        setUploading(true);
+        try {
+          for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            status(`Processing ${i + 1}/${files.length}: ${file.name}`);
+            const { blob, width, height } = await toWebp(file);
+            status(`Uploading ${i + 1}/${files.length}: ${file.name}`);
+            const form = new FormData();
+            form.append('albumId', albumId);
+            form.append('width', String(width));
+            form.append('height', String(height));
+            form.append('file', blob, file.name.replace(/\.\w+$/, '') + '.webp');
+            const headers = {};
+            if (state.token) headers.Authorization = `Bearer ${state.token}`;
+            const res = await fetch('/api/upload', { method: 'POST', body: form, headers, credentials: 'same-origin' });
+            if (!res.ok) {
+              const err = await res.json().catch(() => ({}));
+              throw new Error(err.error || res.statusText);
+            }
+          }
+          status(`Caricate ${files.length} immagini.`);
+        } finally {
+          setUploading(false);
+          fileInput.value = '';
+        }
+      }
+
+      $('loginBtn').onclick = () => unlock().catch((e) => alert(e.message));
+      $('createAlbum').onclick = async () => {
+        try {
+          await api('/api/albums', {
+            method: 'POST',
+            json: {
+              nameIt: $('nameIt').value.trim(),
+              nameEn: $('nameEn').value.trim(),
+              descriptionIt: $('descIt').value.trim(),
+              descriptionEn: $('descEn').value.trim(),
+            },
+          });
+          $('nameIt').value = '';
+          $('nameEn').value = '';
+          $('descIt').value = '';
+          $('descEn').value = '';
+          await loadAlbums();
+        } catch (e) {
+          alert(e.message);
+        }
+      };
+      $('refresh').onclick = () => loadAlbums().catch((e) => alert(e.message));
+      $('logout').onclick = async () => {
+        localStorage.removeItem('admin_token');
+        state.token = '';
+        try {
+          await fetch('/api/auth', { method: 'DELETE', credentials: 'same-origin' });
+        } catch (_) {}
+        location.reload();
+      };
+
+      const drop = $('drop');
+      const fileInput = $('fileInput');
+      drop.onclick = () => { if (!fileInput.disabled) fileInput.click(); };
+      drop.onkeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (!fileInput.disabled) fileInput.click();
+        }
+      };
+      fileInput.onchange = () => uploadFiles(fileInput.files).catch((e) => status(e.message));
+      drop.ondragover = (e) => { e.preventDefault(); drop.classList.add('drag'); };
+      drop.ondragleave = () => drop.classList.remove('drag');
+      drop.ondrop = (e) => {
+        e.preventDefault();
+        drop.classList.remove('drag');
+        uploadFiles(e.dataTransfer.files).catch((err) => status(err.message));
+      };
+
+      if (state.token) {
+        unlock().catch(() => {
+          $('login').classList.remove('hidden');
+          $('app').classList.add('hidden');
+        });
+      }
+    </script>
+  </body>
+</html>
