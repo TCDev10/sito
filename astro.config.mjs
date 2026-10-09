@@ -10,7 +10,10 @@ const SITE_URL = 'https://tcdev.xyz';
  * Album detail pages are omitted until they have photos (thin/empty seed albums).
  * Empty albums also send noindex from the page itself.
  */
-const ssrPhotoPages = ['it', 'en'].map((lang) => `${SITE_URL}/${lang}/photos`);
+const ssrPhotoPages = ['it', 'en'].flatMap((lang) => [
+  `${SITE_URL}/${lang}`,
+  `${SITE_URL}/${lang}/photos`,
+]);
 
 function stripTrailingSlash(url) {
   if (url.endsWith('/') && url !== `${SITE_URL}/`) {
@@ -50,6 +53,8 @@ export default defineConfig({
   output: 'server',
   adapter: cloudflare({
     imageService: 'compile',
+    // Sitemaps are static files; keep them out of the Worker (it 500'd on them).
+    routes: { extend: { exclude: [{ pattern: '/sitemap-index.xml' }, { pattern: '/sitemap-0.xml' }] } },
   }),
   i18n: {
     defaultLocale: 'it',
