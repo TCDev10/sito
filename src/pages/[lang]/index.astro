@@ -10,11 +10,7 @@ import { listAlbums, listPhotos } from '../../lib/storage';
 import { resolveCoverPhoto } from '../../lib/albums';
 import type { Locale } from '../../data/site';
 
-export const prerender = true;
-
-export function getStaticPaths() {
-  return [{ params: { lang: 'it' } }, { params: { lang: 'en' } }];
-}
+export const prerender = false;
 
 const lang = Astro.params.lang!;
 if (!isLocale(lang)) {
@@ -22,10 +18,10 @@ if (!isLocale(lang)) {
 }
 const locale = lang as Locale;
 const featured = publicProjects().slice(0, 4);
-const albums = (await listAlbums()).slice(0, 3);
+const albums = (await listAlbums(Astro.locals)).slice(0, 3);
 const albumMeta = await Promise.all(
   albums.map(async (album) => {
-    const photos = await listPhotos(album.id);
+    const photos = await listPhotos(album.id, Astro.locals);
     return {
       album,
       count: photos.length,
